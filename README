@@ -1,0 +1,42 @@
+如何建立开发环境
+
+首先需要安装VS2003和VS2008(均需要打完补丁升级到对应的最新版)
+然后运行tools下面对应的bat来拉取对应的sdk
+build_env_2003_dev.bat  vs2003的开发版sdk
+build_env_2003_pr.bat	vs2003的发布版sdk
+build_env_2008_dev.bat	vs2008的开发版sdk
+build_env_2008_pr.bat	vs2008的发布版sdk
+
+然后打开src目录相应的sln即可：
+BXF.vc7.sln	vs2003的sln
+BXF.vc9.sln	vs2008的sln
+
+三个标准工程配置:
+Debug 	调试版配置，一般开发过程中使用
+Release 日志版配置，在发布版的基础上增加日志输出、出错提示等，配合BOLT的开发版
+ProductRelease	发布版配置，没有任何日志输出，出错提示，配合BOLT的发布版
+
+bin
+该目录是编译生成的DLL/EXE输出目录，里面也同时有BOLT的相关二进制文件
+
+bolt
+BOLT SDK的include和lib目录
+
+build
+编译管理的工程文件目录，现在为了方便直接使用VS，并把对应的sln和vcproj文件放在src目录了，同时存在vs2003(vc7)和vs2008(vc9)两个不同的工程配置，以后可能采用更统一的工具和方式来生成工程配置
+
+src
+源代码目录，现在也包含了基于VS的解决方案和工程文件
+
+pdb
+调试数据库存放目录，需要区分不同的工程配置存放
+
+tmp
+临时目录，用以存放编译和链接过程中生成的临时文件
+
+docs
+文档目录，一般来说每个扩展对象/资源等独立扩展类型，都需要有一份对应的文档在该目录
+
+tools
+辅助工具目录以及建立开发环境的辅助bat
+

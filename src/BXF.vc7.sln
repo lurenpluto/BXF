@@ -1,0 +1,26 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XLUEExtObject", "XLUEExtObject\XLUEExtObject.vc7.vcproj", "{307F6D7E-5EE3-4069-9148-3F9240CF71D0}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		ProductRelease = ProductRelease
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{307F6D7E-5EE3-4069-9148-3F9240CF71D0}.Debug.ActiveCfg = Debug|Win32
+		{307F6D7E-5EE3-4069-9148-3F9240CF71D0}.Debug.Build.0 = Debug|Win32
+		{307F6D7E-5EE3-4069-9148-3F9240CF71D0}.ProductRelease.ActiveCfg = ProductRelease|Win32
+		{307F6D7E-5EE3-4069-9148-3F9240CF71D0}.ProductRelease.Build.0 = ProductRelease|Win32
+		{307F6D7E-5EE3-4069-9148-3F9240CF71D0}.Release.ActiveCfg = Release|Win32
+		{307F6D7E-5EE3-4069-9148-3F9240CF71D0}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

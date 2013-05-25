@@ -6,7 +6,9 @@
 .project
 .metadata
 bin/
+bolt/
 tmp/
+pdb/
 *.tmp
 *.bak
 *.swp

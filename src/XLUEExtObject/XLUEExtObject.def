@@ -1,0 +1,7 @@
+LIBRARY	XLUEExtObject
+
+EXPORTS
+	
+	XLUE_RegisterObj
+	XLUE_InitExtModule
+	XLUE_UninitExtModule
