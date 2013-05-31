@@ -1,6 +1,8 @@
 #ifndef __MAGICOBJECTREGISTER_H__
 #define __MAGICOBJECTREGISTER_H__
 
+#define EXTCLASSNAME_MAGICOBJECT "MagicObject"
+
 class MagicObjectRegister
 {
 public:

@@ -1,0 +1,7 @@
+<xlue>
+	<object>
+		<obj class="MagicObject" module="./XLUEExtObject.dll" func="XLUE_RegisterObj"/>
+		<obj class="MirrorObject" module="./XLUEExtObject.dll" func="XLUE_RegisterObj"/>
+		<obj class="RippleObject" module="./XLUEExtObject.dll" func="XLUE_RegisterObj"/>
+	</object>
+</xlue>

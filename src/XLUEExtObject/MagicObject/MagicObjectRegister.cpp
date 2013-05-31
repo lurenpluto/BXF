@@ -7,5 +7,8 @@
 
 BOOL MagicObjectRegister::RegisterMagicObject()
 {
-	return ExtObjRegisterHelper<ExtObjType_renderableObj, MagicObject, MagicObjectCreator, MagicObjectParser, LuaMagicObject>::Register(EXTCLASSNAME_MAGICOBJECT);
+	unsigned long attribute = ExtObjAttribute_clipsens;
+
+	return ExtObjRegisterHelper<ExtObjType_renderableObj, MagicObject, 
+		MagicObjectCreator, MagicObjectParser, LuaMagicObject>::Register(EXTCLASSNAME_MAGICOBJECT, attribute);
 }

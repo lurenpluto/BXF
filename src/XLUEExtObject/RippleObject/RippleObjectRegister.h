@@ -6,31 +6,25 @@
 * =                                                                 =
 * =-----------------------------------------------------------------=
 * 
-*   FileName    :   MagicObjectParser
+*   FileName    :   RippleObjectRegister
 *   Author      :   李亚星
-*   Create      :   2013-5-20 0:32
-*   LastChange  :   2013-5-20 0:32
+*   Create      :   2013-5-31 
+*   LastChange  :   2013-5-31
 *   History     :	
 *
-*   Description :   MagicObject的xml定义解析器
+*   Description :   RippleObject的注册类
 *
 ********************************************************************/ 
-#ifndef __MAGICOBJECTPARSER_H__
-#define __MAGICOBJECTPARSER_H__
+#ifndef __RIPPLEOBJECTREGISTER_H__
+#define __RIPPLEOBJECTREGISTER_H__
 
-#include "./MagicObject.h"
+#define EXTCLASSNAME_RIPPLEOBJECT "RippleObject"
 
-class MagicObjectParser
-	: public ExtObjParserImpl<MagicObject>
+class RippleObjectRegister
 {
 public:
-	MagicObjectParser(void);
-	virtual ~MagicObjectParser(void);
-
-private:
-
-	// ExtObjParserImpl
-	virtual BOOL ParserAttribute(MagicObject* lpObj, const char* key, const char* value);
+	
+	static BOOL RegisterRippleObject();
 };
 
-#endif // __MAGICOBJECTPARSER_H__
+#endif // __RIPPLEOBJECTREGISTER_H__

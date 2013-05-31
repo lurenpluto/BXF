@@ -20,7 +20,7 @@ set local_bin_dir=..\bin
 
 :创建bolt sdk的目录
 mkdir %local_dir%
-mkdir %local_dir%\inlcude
+mkdir %local_dir%\include
 mkdir %lcoal_dir%\lib
 
 :拉取sdk的include头文件
@@ -62,5 +62,8 @@ set sdk_dll=%local_bin_dir%\Debug
 
 xcopy /Y %local_bin_dir%\Debug %local_bin_dir%\Release
 xcopy /Y %local_bin_dir%\Debug %local_bin_dir%\ProductRelease
+
+:拷贝BOLT引擎的扩展配置表
+call .\copy_extconfig.bat
 
 pause

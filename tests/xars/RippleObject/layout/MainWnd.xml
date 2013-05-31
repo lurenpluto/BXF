@@ -1,0 +1,76 @@
+<!--XML最好存储为UTF-8编码-->
+<xlue>
+
+<objtreetemplate id="HelloBolt.Tree" class="ObjectTreeTemplate">
+	<attr>
+			<left>-200</left>
+			<top>-200</top>
+			<width>2000</width>
+			<height>2000</height>
+	</attr>
+
+										
+	<obj id="app.bkg" class="ImageObject">
+		<attr>
+			<image>bkg</image>
+		</attr>
+		<children>
+			<obj id="caption" class="CaptionObject">
+				<attr>
+					<width>father.width</width>
+					<height>father.height</height>
+					<zorder>-1000</zorder>
+				</attr>
+			</obj>
+			<obj class="LayerObject">
+				<attr>
+					<width>father.width</width>
+					<height>father.height</height>
+					<clipsens>1</clipsens>
+				</attr>
+				<children>
+					<obj class="RippleObject">
+						<attr>
+							<width>father.width</width>
+							<height>father.height</height>
+							<dropdensity>10</dropdensity>
+							<updateinterval>40</updateinterval>
+							<waterdensity>3</waterdensity>
+							<randomdrop>1</randomdrop>
+							<mousedrop>1</mousedrop>
+						</attr>
+					</obj>
+				</children>
+			</obj>
+		</children>
+	</obj>
+</objtreetemplate>
+	
+<hostwndtemplate id="HelloBolt.Wnd" class="FrameHostWnd">
+		<attr> 
+			<mainwnd>1</mainwnd>
+			<title>Bolt</title>
+			<layered>1</layered>
+			<left>200</left> 
+			<top>100</top>
+			<!--注意这是容器窗口的大小，设置的要合理-->
+			<width>800</width>
+			<height>600</height>
+			<topmost>0</topmost>
+			<visible>1</visible>
+			<enable>1</enable>
+			<maxbox>0</maxbox>
+			<minbox>0</minbox>
+			<minwidth>100</minwidth>
+			<minheight>72</minheight>
+			<maxwidth>1000</maxwidth>
+			<maxheight>720</maxheight>
+			<appwindow>1</appwindow>
+			<fps>30</fps>
+		</attr>
+		<eventlist>
+			<event name="OnSize" file="MainWnd.xml.lua" func="OnSize"/>
+			<event name="OnClose" file="MainWnd.xml.lua" func="OnClose"/>
+		</eventlist>
+</hostwndtemplate>
+</xlue>

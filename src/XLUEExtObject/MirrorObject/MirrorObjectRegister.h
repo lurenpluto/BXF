@@ -6,31 +6,25 @@
 * =                                                                 =
 * =-----------------------------------------------------------------=
 * 
-*   FileName    :   MagicObjectParser
+*   FileName    :   MirrorObjectRegister
 *   Author      :   李亚星
-*   Create      :   2013-5-20 0:32
-*   LastChange  :   2013-5-20 0:32
+*   Create      :   2013-5-26 13:32
+*   LastChange  :   2013-5-26 13:32
 *   History     :	
 *
-*   Description :   MagicObject的xml定义解析器
+*   Description :   MirrorObject的注册辅助类
 *
 ********************************************************************/ 
-#ifndef __MAGICOBJECTPARSER_H__
-#define __MAGICOBJECTPARSER_H__
+#ifndef __MIRROROBJECTREGISTER_H__
+#define __MIRROROBJECTREGISTER_H__
 
-#include "./MagicObject.h"
+#define EXTCLASSNAME_MIRROROBJECT "MirrorObject"
 
-class MagicObjectParser
-	: public ExtObjParserImpl<MagicObject>
+class MirrorObjectRegister
 {
 public:
-	MagicObjectParser(void);
-	virtual ~MagicObjectParser(void);
 
-private:
-
-	// ExtObjParserImpl
-	virtual BOOL ParserAttribute(MagicObject* lpObj, const char* key, const char* value);
+	static BOOL RegisterMirrorObject();
 };
 
-#endif // __MAGICOBJECTPARSER_H__
+#endif // __MIRROROBJECTREGISTER_H__

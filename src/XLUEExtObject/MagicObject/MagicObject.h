@@ -21,8 +21,6 @@
 //#include "../../XLGraphicPlus/XLGraphicPlusAlgorithm.h"
 //#pragma comment(lib, "XLGraphicPlus.lib")
 
-#define EXTCLASSNAME_MAGICOBJECT "MagicObject"
-
 class MagicObject
 	: public ExtLayoutObjMethodsImpl
 {
@@ -38,7 +36,7 @@ public:
 		//
 	}
 
-	virtual void OnPaint(XL_BITMAP_HANDLE hBitmapDest, const RECT* lpDestClipRect, const RECT* lpSrcClipRect, unsigned char alpha)
+	virtual void OnPaint(XL_BITMAP_HANDLE hBitmapDest, const RECT* lpDestClipRect, const RECT* /*lpSrcClipRect*/, unsigned char /*alpha*/)
 	{
 		XL_BITMAP_HANDLE hBitmap = XL_ClipSubBindBitmap(hBitmapDest, lpDestClipRect);
 		//XLGP_BlackAndWhite(hBitmap, 50, 0);

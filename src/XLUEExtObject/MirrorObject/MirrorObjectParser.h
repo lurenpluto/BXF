@@ -6,31 +6,31 @@
 * =                                                                 =
 * =-----------------------------------------------------------------=
 * 
-*   FileName    :   MagicObjectParser
+*   FileName    :   MirrorObjectParser
 *   Author      :   李亚星
-*   Create      :   2013-5-20 0:32
-*   LastChange  :   2013-5-20 0:32
+*   Create      :   2013-5-26 13:30
+*   LastChange  :   2013-5-26 13:30
 *   History     :	
 *
-*   Description :   MagicObject的xml定义解析器
+*   Description :   MirrorObject的xml定义解析器
 *
 ********************************************************************/ 
-#ifndef __MAGICOBJECTPARSER_H__
-#define __MAGICOBJECTPARSER_H__
+#ifndef __MIRROROBJECTPARSER_H__
+#define __MIRROROBJECTPARSER_H__
 
-#include "./MagicObject.h"
+#include "./MirrorObject.h"
 
-class MagicObjectParser
-	: public ExtObjParserImpl<MagicObject>
+class MirrorObjectParser
+	: public ExtObjParserImpl<MirrorObject>
 {
 public:
-	MagicObjectParser(void);
-	virtual ~MagicObjectParser(void);
+	MirrorObjectParser(void);
+	virtual ~MirrorObjectParser(void);
 
 private:
 
 	// ExtObjParserImpl
-	virtual BOOL ParserAttribute(MagicObject* lpObj, const char* key, const char* value);
+	virtual BOOL ParserAttribute(MirrorObject* lpObj, const char* key, const char* value);
 };
 
-#endif // __MAGICOBJECTPARSER_H__
+#endif // __MIRROROBJECTPARSER_H__

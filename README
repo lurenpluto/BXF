@@ -40,3 +40,6 @@ docs
 tools
 辅助工具目录以及建立开发环境的辅助bat
 
+extconfig
+BOLT的扩展模块配置表，新增的各种扩展都需要更新此表；运行tools\copy_extconfig.bat，可以拷贝此表到bin目录下各个工程配置的程序运行目录
+

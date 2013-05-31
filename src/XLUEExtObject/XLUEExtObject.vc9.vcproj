@@ -50,7 +50,7 @@
 				TreatWChar_tAsBuiltInType="true"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
-				WarningLevel="3"
+				WarningLevel="4"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -368,6 +368,102 @@
 			</File>
 			<File
 				RelativePath=".\XLUEExtObject.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="MirrorObject"
+			>
+			<File
+				RelativePath=".\MirrorObject\LuaMirrorObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MirrorObject\LuaMirrorObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MirrorObject\MirrorObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MirrorObject\MirrorObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MirrorObject\MirrorObjectCreator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MirrorObject\MirrorObjectCreator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MirrorObject\MirrorObjectParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MirrorObject\MirrorObjectParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MirrorObject\MirrorObjectRegister.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MirrorObject\MirrorObjectRegister.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="RippleObject"
+			>
+			<File
+				RelativePath=".\RippleObject\LuaRippleObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RippleObject\LuaRippleObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RippleObject\RippleItem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RippleObject\RippleItem.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RippleObject\RippleObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RippleObject\RippleObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RippleObject\RippleObjectCreator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RippleObject\RippleObjectCreator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RippleObject\RippleObjectParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RippleObject\RippleObjectParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RippleObject\RippleObjectRegister.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RippleObject\RippleObjectRegister.h"
 				>
 			</File>
 		</Filter>

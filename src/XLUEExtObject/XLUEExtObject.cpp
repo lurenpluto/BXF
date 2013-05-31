@@ -4,22 +4,18 @@
 #include "stdafx.h"
 #include "./XLUEExtObject.h"
 #include <XLUE.h>
-#include "./MagicObject/MagicObjectRegister.h"
 #include <assert.h>
 
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
-                       LPVOID lpReserved
+#include "./MagicObject/MagicObjectRegister.h"
+#include "./MirrorObject/MirrorObjectRegister.h"
+#include "./RippleObject/RippleObjectRegister.h"
+
+
+BOOL APIENTRY DllMain( HANDLE /*hModule*/, 
+                       DWORD  /*ul_reason_for_call*/, 
+                       LPVOID /*lpReserved*/
 					 )
 {
-	switch (ul_reason_for_call)
-	{
-	case DLL_PROCESS_ATTACH:
-	case DLL_THREAD_ATTACH:
-	case DLL_THREAD_DETACH:
-	case DLL_PROCESS_DETACH:
-		break;
-	}
     return TRUE;
 }
 
@@ -42,9 +38,17 @@ BOOL XLUE_STDCALL XLUE_RegisterObj( const char* lpObjClass )
 
 	BOOL ret = FALSE;
 
-	if (strcmp(lpObjClass, "MagicObject") == 0)
+	if (strcmp(lpObjClass, EXTCLASSNAME_MAGICOBJECT) == 0)
 	{
 		ret = MagicObjectRegister::RegisterMagicObject();
+	}
+	else if (strcmp(lpObjClass, EXTCLASSNAME_MIRROROBJECT) == 0)
+	{
+		ret = MirrorObjectRegister::RegisterMirrorObject();
+	}
+	else if (strcmp(lpObjClass, EXTCLASSNAME_RIPPLEOBJECT) == 0)
+	{
+		ret = RippleObjectRegister::RegisterRippleObject();
 	}
 	else
 	{
