@@ -21,7 +21,7 @@
 #include "./MirrorObject.h"
 
 class LuaMirrorObject
-	: public ExtObjLuaHostImpl<LuaMirrorObject, MirrorObject>
+	: public ExtObjLuaHostImplEx<LuaMirrorObject, MirrorObject>
 {
 public:
 	LuaMirrorObject(void);
@@ -39,7 +39,7 @@ private:
 
 public:
 
-	static XLLRTGlobalAPI s_szLuaMemberFuncs[];
+	static const XLLRTGlobalAPI s_szLuaMemberFuncs[];
 };
 
 #endif // __LUAMIRROROBJECT_H__

@@ -30,7 +30,7 @@ public:
 private:
 
 	// ExtObjParserImpl
-	virtual BOOL ParserAttribute(MirrorObject* lpObj, const char* key, const char* value);
+	virtual bool ParserAttribute(MirrorObject* lpObj, const char* key, const char* value);
 };
 
 #endif // __MIRROROBJECTPARSER_H__

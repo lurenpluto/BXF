@@ -30,7 +30,7 @@ public:
 private:
 
 	// ExtObjParserImpl
-	virtual BOOL ParserAttribute(RippleObject* lpObj, const char* key, const char* value);
+	virtual bool ParserAttribute(RippleObject* lpObj, const char* key, const char* value);
 };
 
 #endif // __RIPPLEOBJECTPARSER_H__

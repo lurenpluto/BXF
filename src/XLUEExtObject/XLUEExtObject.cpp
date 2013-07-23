@@ -32,8 +32,9 @@ BOOL XLUE_STDCALL XLUE_UninitExtModule()
 	return TRUE;
 }
 
-BOOL XLUE_STDCALL XLUE_RegisterObj( const char* lpObjClass )
+BOOL XLUE_STDCALL XLUE_RegisterObj( const char* lpCategory, const char* lpObjClass )
 {
+	assert(lpCategory);
 	assert(lpObjClass);
 
 	BOOL ret = FALSE;

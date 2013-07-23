@@ -9,7 +9,7 @@ LuaMirrorObject::~LuaMirrorObject(void)
 {
 }
 
-XLLRTGlobalAPI LuaMirrorObject::s_szLuaMemberFuncs[] = 
+const XLLRTGlobalAPI LuaMirrorObject::s_szLuaMemberFuncs[] = 
 {
 	{"GetMirrorType", GetMirrorType},
 	{"SetMirrorType", SetMirrorType},

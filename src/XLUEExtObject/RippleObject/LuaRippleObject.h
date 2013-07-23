@@ -21,7 +21,7 @@
 #include "./RippleObject.h"
 
 class LuaRippleObject
-	:public ExtObjLuaHostImpl<LuaRippleObject, RippleObject>
+	:public ExtObjLuaHostImplEx<LuaRippleObject, RippleObject>
 {
 public:
 	LuaRippleObject(void);
@@ -48,7 +48,7 @@ private:
 
 public:
 
-	static XLLRTGlobalAPI s_szLuaMemberFuncs[];
+	static const XLLRTGlobalAPI s_szLuaMemberFuncs[];
 };
 
 #endif // __LUARIPPLEOBJECT_H__

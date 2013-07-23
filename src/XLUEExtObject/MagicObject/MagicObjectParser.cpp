@@ -9,9 +9,9 @@ MagicObjectParser::~MagicObjectParser(void)
 {
 }
 
-BOOL MagicObjectParser::ParserAttribute( MagicObject* lpObj, const char* /*key*/, const char* /*value*/ )
+bool MagicObjectParser::ParserAttribute( MagicObject* lpObj, const char* /*key*/, const char* /*value*/ )
 {
 	assert(lpObj);
 
-	return FALSE;
+	return false;
 }

@@ -21,7 +21,7 @@
 #include "./MagicObject.h"
 
 class LuaMagicObject
-	: public ExtObjLuaHostImpl<LuaMagicObject, MagicObject>
+	: public ExtObjLuaHostImplEx<LuaMagicObject, MagicObject>
 {
 public:
 	LuaMagicObject(void);

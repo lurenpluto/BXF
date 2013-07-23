@@ -9,9 +9,9 @@ RippleObjectParser::~RippleObjectParser(void)
 {
 }
 
-BOOL RippleObjectParser::ParserAttribute( RippleObject* lpObj, const char* key, const char* value )
+bool RippleObjectParser::ParserAttribute( RippleObject* lpObj, const char* key, const char* value )
 {
-	BOOL ret = TRUE;
+	bool ret = true;
 
 	assert(lpObj);
 	if (strcmp(key, "mousedrop") == 0)
@@ -41,7 +41,7 @@ BOOL RippleObjectParser::ParserAttribute( RippleObject* lpObj, const char* key, 
 	}
 	else
 	{
-		ret = FALSE;
+		ret = false;
 		assert(false);
 	}
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "./LuaRippleObject.h"
 
-XLLRTGlobalAPI LuaRippleObject::s_szLuaMemberFuncs[] = 
+const XLLRTGlobalAPI LuaRippleObject::s_szLuaMemberFuncs[] = 
 {
 	{"SetMouseDrop", SetMouseDrop},
 	{"GetMouseDrop", GetMouseDrop},

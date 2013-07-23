@@ -10,13 +10,13 @@ MirrorObjectParser::~MirrorObjectParser(void)
 {
 }
 
-BOOL MirrorObjectParser::ParserAttribute( MirrorObject* lpObj, const char* key, const char* value )
+bool MirrorObjectParser::ParserAttribute( MirrorObject* lpObj, const char* key, const char* value )
 {
 	assert(lpObj);
 	assert(key);
 	assert(value);
 
-	BOOL ret = TRUE;
+	bool ret = true;
 	if (strcmp(key, "mirrortype") == 0)
 	{
 		MirrorObject::MirrorType type = LuaMirrorObject::GetMirrorTypeFromString(value);
@@ -25,7 +25,7 @@ BOOL MirrorObjectParser::ParserAttribute( MirrorObject* lpObj, const char* key, 
 	else
 	{
 		assert(false);
-		ret = FALSE;
+		ret = false;
 	}
 
 	return ret;

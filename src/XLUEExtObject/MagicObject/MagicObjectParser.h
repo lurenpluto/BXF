@@ -30,7 +30,7 @@ public:
 private:
 
 	// ExtObjParserImpl
-	virtual BOOL ParserAttribute(MagicObject* lpObj, const char* key, const char* value);
+	virtual bool ParserAttribute(MagicObject* lpObj, const char* key, const char* value);
 };
 
 #endif // __MAGICOBJECTPARSER_H__
