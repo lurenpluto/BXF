@@ -1,8 +1,8 @@
 :设置拉取的sdk的具体版本，默认为最新版
 set sdk_ver=HEAD
 
-:设置拉取vs2003orvs2008的sdk，默认为2003
-if "%1" == "2008" (set sdk_vs_ver=2008) else (set sdk_vs_ver=2003)
+:设置拉取vs2003orvs2008的sdk，默认为2008
+if "%1" == "2003" (set sdk_vs_ver=2003) else (set sdk_vs_ver=2008)
 
 :设置拉取开发版sdk还是发布版sdk，默认为开发版
 if "%2" == "pr" (set sdk_dev_ver=pr) else (set sdk_dev_ver=dev)
@@ -51,7 +51,7 @@ set sdk_dll=%local_bin_dir%\Debug
 set sdk_dll_url=%sdk_vs_url%/bin
 set sdk_dll=%local_bin_dir%\Debug
 
-%svn_tool% export --force -r %sdk_ver% %sdk_dll_url% %sdk_dll%
+%svn_tool% export --depth infinity --force -r %sdk_ver% %sdk_dll_url% %sdk_dll%
 
 :拉取sdk的dll
 set sdk_dll_url=%sdk_vs_url%/dev/%sdk_dev_ver%/bin
@@ -60,8 +60,8 @@ set sdk_dll=%local_bin_dir%\Debug
 %svn_tool% export --force -r %sdk_ver% %sdk_dll_url% %sdk_dll%
 
 
-xcopy /Y %local_bin_dir%\Debug %local_bin_dir%\Release
-xcopy /Y %local_bin_dir%\Debug %local_bin_dir%\ProductRelease
+xcopy /Y /E %local_bin_dir%\Debug %local_bin_dir%\Release
+xcopy /Y /E %local_bin_dir%\Debug %local_bin_dir%\ProductRelease
 
 :拷贝BOLT引擎的扩展配置表
 call .\copy_extconfig.bat
