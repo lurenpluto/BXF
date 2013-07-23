@@ -1,0 +1,41 @@
+// Copyright (c) 2009-2013 BOLT UIEngine Copyright (c)
+// 2003-2013 ShenZhen Thunder Networking Technologies Ltd. All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//    * Source code and modified source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//    * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//    * Neither the name of BOLT UIEngine. nor the name Thunder Newworking 
+// Technologies. nor the names of its contributors may be used to endorse
+// or promote products derived from this software without specific prior
+// written permission.
+//    * In terms of the open source code and modules derived based on the source, 
+// we have the authority to integrate and use, and use unique BOLT trademark
+//
+// 在满足下面的条件下，可以以开源或者二进制形式发布和使用源代码，
+// 包括对源代码进行修改或者不进行修改：
+//
+// 	  * 在源代码和修改的源代码中必须带有原来代码中的BOLT License协议。
+// 	  * 如果再发布的只是二进制类库/软件，则需要在类库/软件的文档和版权声明中包含
+// 原来代码中的BOLT License协议。
+//    * 不可以使用Bolt、迅雷网络和其他贡献者名字用以支持和推广该源代码的衍生品
+//    * 基于该源代码衍生的开源代码和模块，我们有权利集成和使用，并统一使用BOLT商标
+//
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

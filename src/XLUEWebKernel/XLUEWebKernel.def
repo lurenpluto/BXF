@@ -1,0 +1,10 @@
+LIBRARY	"XLUEWebKernel"
+
+EXPORTS
+	
+	XLUE_RegisterObj
+	XLUE_InitExtModule
+	XLUE_UninitExtModule
+	
+	XLUE_RunWebServer
+	XLUE_IsWebServerIdle
