@@ -1,6 +1,8 @@
-// XLUEExtObject.cpp : Defines the entry point for the DLL application.
-//
-
+/********************************************************************
+/* Copyright (c) 2013 The BOLT UIEngine. All rights reserved.
+/* Use of this source code is governed by a BOLT license that can be
+/* found in the LICENSE file.
+********************************************************************/ 
 #include "stdafx.h"
 #include "./XLUEExtObject.h"
 #include <XLUE.h>
@@ -9,7 +11,8 @@
 #include "./MagicObject/MagicObjectRegister.h"
 #include "./MirrorObject/MirrorObjectRegister.h"
 #include "./RippleObject/RippleObjectRegister.h"
-
+#include "./IconResource/IconResRegister.h"
+#include "./HostWndIconObject/HostWndIconObjectRegister.h"
 
 BOOL APIENTRY DllMain( HANDLE /*hModule*/, 
                        DWORD  /*ul_reason_for_call*/, 
@@ -22,13 +25,19 @@ BOOL APIENTRY DllMain( HANDLE /*hModule*/,
 // 扩展模块初始回调，每个扩展模块被加载时候会调用该接口
 BOOL XLUE_STDCALL XLUE_InitExtModule()
 {
-	//TODO
+	XLGraphicPlusParam param;
+	XLGP_PrepareGraphicPlusParam(&param);
+
+	param.bInitLua = TRUE;
+	XLGP_InitGraphicPlus(&param);
+
 	return TRUE;
 }
 
 BOOL XLUE_STDCALL XLUE_UninitExtModule()
 {
-	//TODO
+	XLGP_UnInitGraphicPlus();
+
 	return TRUE;
 }
 
@@ -51,10 +60,33 @@ BOOL XLUE_STDCALL XLUE_RegisterObj( const char* lpCategory, const char* lpObjCla
 	{
 		ret = RippleObjectRegister::RegisterRippleObject();
 	}
+	else if (strcmp(lpObjClass, EXTCLASSNAME_HOSTWNDICONOBJECT) == 0)
+	{
+		ret = HostWndIconObjectRegister::RegisterHostWndIconObject();
+	}
 	else
 	{
 		assert(false);
 	}
 
 	return ret;
+}
+
+BOOL XLUE_STDCALL XLUE_RegisterRes( const char* lpCategory, const char* lpResClass )
+{
+	assert(lpCategory);
+	assert(lpResClass);
+
+	bool ret = false;
+
+	if (strcmp(lpResClass, XLUE_EXTRES_ICON) == 0)
+	{
+		ret = IconResRegister::RegisterIconRes();
+	}
+	else
+	{
+		assert(false);
+	}
+
+	return ret? TRUE : FALSE;
 }

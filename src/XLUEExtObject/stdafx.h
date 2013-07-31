@@ -12,4 +12,6 @@
 
 #include <BXF/BXF.h>
 
+#include "../XLUELib/XLUELib.h"
+
 using namespace Xunlei::Bolt;

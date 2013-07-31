@@ -1,0 +1,60 @@
+<!--XML最好存储为UTF-8编码-->
+<xlue>
+
+<objtreetemplate id="HelloBolt.Tree" class="ObjectTreeTemplate">
+	<attr>
+			<left>-200</left>
+			<top>-200</top>
+			<width>2000</width>
+			<height>2000</height>
+	</attr>
+
+										
+	<obj id="app.bkg" class="ImageObject">
+		<attr>
+			<image>bkg</image>
+		</attr>
+		<children>
+			<obj id="caption" class="CaptionObject">
+				<attr>
+					<width>father.width</width>
+					<height>father.height</height>
+					<zorder>-1000</zorder>
+				</attr>
+			</obj>
+			<obj class="HostWndIconObject">
+				<attr>
+					<smallicon>wnd.small</smallicon>
+					<bigicon>wnd.big</bigicon>
+				</attr>
+			</obj>
+		</children>
+	</obj>
+</objtreetemplate>
+	
+<hostwndtemplate id="HelloBolt.Wnd" class="FrameHostWnd">
+		<attr> 
+			<title>Bolt</title>
+			<layered>1</layered>
+			<left>200</left> 
+			<top>100</top>
+			<width>800</width>
+			<height>600</height>
+			<topmost>0</topmost>
+			<visible>1</visible>
+			<enable>1</enable>
+			<maxbox>0</maxbox>
+			<minbox>0</minbox>
+			<minwidth>100</minwidth>
+			<minheight>72</minheight>
+			<maxwidth>1000</maxwidth>
+			<maxheight>720</maxheight>
+			<appwindow>1</appwindow>
+
+		</attr>
+		<eventlist>
+			<event name="OnSize" file="MainWnd.xml.lua" func="OnSize"/>
+			<event name="OnClose" file="MainWnd.xml.lua" func="OnClose"/>
+		</eventlist>
+</hostwndtemplate>
+</xlue>

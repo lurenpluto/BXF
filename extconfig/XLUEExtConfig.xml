@@ -3,7 +3,12 @@
 		<obj class="MagicObject" module="./XLUEExtObject.dll" func="XLUE_RegisterObj"/>
 		<obj class="MirrorObject" module="./XLUEExtObject.dll" func="XLUE_RegisterObj"/>
 		<obj class="RippleObject" module="./XLUEExtObject.dll" func="XLUE_RegisterObj"/>
+		<obj class="HostWndIconObject" module="./XLUEExtObject.dll" func="XLUE_RegisterObj"/>
+		
 		<obj class="BoltBrowserObject" module="./XLUEWebKernel.dll" func="XLUE_RegisterObj"/>
 		<obj class="WindowlessBoltBrowserObject" module="./XLUEWebKernel.dll" func="XLUE_RegisterObj"/>
 	</object>
+	<resource>
+		<res class="icon" module="./XLUEExtObject.dll" func="XLUE_RegisterRes"/>
+	</resource>
 </xlue>

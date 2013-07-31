@@ -11,5 +11,3 @@
 #endif
 
 #include <XLUE.h>
-
-BOOL XLUE_STDCALL XLUE_ExtObj_RegisterObj(const char* lpObjClass);

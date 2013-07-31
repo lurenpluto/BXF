@@ -1,0 +1,9 @@
+<XLUE>
+<resource>
+	 <bitmap id="bkg"  image="bitmap\bkg.png" />
+	 
+	 <icon id="wnd.big"  width="32" height="32" file="bitmap\thunder.ico" />
+	 <icon id="wnd.small"  width="16" height="16" file="bitmap\thunder.ico" />
+	  
+</resource>
+</XLUE>

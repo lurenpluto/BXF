@@ -46,7 +46,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;XLUEEXTOBJECT_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				TreatWChar_tAsBuiltInType="true"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
@@ -64,10 +64,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="XLUE.lib XLGraphic.lib XLLuaRuntime.lib"
+				AdditionalDependencies="XLUE.lib XLGraphic.lib XLLuaRuntime.lib XLGraphicPlus.lib shlwapi.lib XLUELib.lib"
 				OutputFile="$(OutDir)/XLUEExtObject.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../bolt/lib"
+				AdditionalLibraryDirectories="../../bolt/lib;../../lib/$(ConfigurationName)"
 				ModuleDefinitionFile="./XLUEExtObject.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="../../pdb/$(ConfigurationName)/$(TargetName).pdb"
@@ -126,7 +126,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../../bolt/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;XLUEEXTOBJECT_EXPORTS"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				TreatWChar_tAsBuiltInType="true"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
@@ -144,10 +144,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="XLUE.lib XLGraphic.lib XLLuaRuntime.lib"
+				AdditionalDependencies="XLUE.lib XLGraphic.lib XLLuaRuntime.lib XLGraphicPlus.lib shlwapi.lib XLUELib.lib"
 				OutputFile="$(OutDir)/XLUEExtObject.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../bolt/lib"
+				AdditionalLibraryDirectories="../../bolt/lib;../../lib/$(ConfigurationName)"
 				ModuleDefinitionFile="./XLUEExtObject.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="../../pdb/$(ConfigurationName)/$(TargetName).pdb"
@@ -208,7 +208,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../../bolt/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;XLUEEXTOBJECT_EXPORTS"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				TreatWChar_tAsBuiltInType="true"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
@@ -226,10 +226,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="XLUE.lib XLGraphic.lib XLLuaRuntime.lib"
+				AdditionalDependencies="XLUE.lib XLGraphic.lib XLLuaRuntime.lib XLGraphicPlus.lib shlwapi.lib XLUELib.lib"
 				OutputFile="$(OutDir)/XLUEExtObject.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../bolt/lib"
+				AdditionalLibraryDirectories="../../bolt/lib;../../lib/$(ConfigurationName)"
 				ModuleDefinitionFile="./XLUEExtObject.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="../../pdb/$(ConfigurationName)/$(TargetName).pdb"
@@ -466,6 +466,98 @@
 			</File>
 			<File
 				RelativePath=".\RippleObject\RippleObjectRegister.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="IconResource"
+			>
+			<File
+				RelativePath=".\IconResource\IconRes.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\IconResource\IconRes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IconResource\IconResCreator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\IconResource\IconResCreator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IconResource\IconResHolder.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IconResource\IconResParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\IconResource\IconResParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IconResource\IconResRegister.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\IconResource\IconResRegister.h"
+				>
+			</File>
+			<File
+				RelativePath=".\IconResource\LuaIconRes.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\IconResource\LuaIconRes.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="HostWndIconObject"
+			>
+			<File
+				RelativePath=".\HostWndIconObject\HostWndIconObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HostWndIconObject\HostWndIconObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HostWndIconObject\HostWndIconObjectCreator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HostWndIconObject\HostWndIconObjectCreator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HostWndIconObject\HostWndIconObjectParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HostWndIconObject\HostWndIconObjectParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HostWndIconObject\HostWndIconObjectRegister.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HostWndIconObject\HostWndIconObjectRegister.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HostWndIconObject\LuaHostWndIconObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HostWndIconObject\LuaHostWndIconObject.h"
 				>
 			</File>
 		</Filter>
