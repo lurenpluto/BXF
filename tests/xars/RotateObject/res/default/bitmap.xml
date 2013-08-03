@@ -1,0 +1,12 @@
+<XLUE>
+	<resource>
+		<bitmap id="clock" image="bitmap\clock.png"/>
+		<bitmap id="clock_dot" image="bitmap\dot.png"/>
+		<bitmap id="clock_h" image="bitmap\h.png"/>
+		<bitmap id="clock_m" image="bitmap\m.png"/>
+		<bitmap id="clock_s" image="bitmap\s.png"/>
+		
+		<icon id="wnd.big"  width="32" height="32" file="bitmap\clock.ico" />
+		<icon id="wnd.small"  width="16" height="16" file="bitmap\clock.ico" />
+	</resource>
+</XLUE>

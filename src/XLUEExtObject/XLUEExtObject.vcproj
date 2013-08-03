@@ -561,6 +561,58 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="RotateObject"
+			>
+			<File
+				RelativePath=".\RotateObject\LuaRotateObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RotateObject\LuaRotateObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RotateObject\RotateObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RotateObject\RotateObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RotateObject\RotateObjectCreator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RotateObject\RotateObjectCreator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RotateObject\RotateObjectParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RotateObject\RotateObjectParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RotateObject\RotateObjectRegister.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RotateObject\RotateObjectRegister.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RotateObject\RotateProvider.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RotateObject\RotateProvider.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

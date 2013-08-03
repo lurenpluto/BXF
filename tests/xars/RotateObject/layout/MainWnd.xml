@@ -1,0 +1,178 @@
+<!--XML最好存储为UTF-8编码-->
+<xlue>
+
+<control class="ClockHands">
+	<attr_def>
+		<attr name="Angel" type="string"/>
+		<attr name="Image" type="string"/>
+	</attr_def>
+	<method_def>
+		<SetAngel>
+			local arg = {...}
+			local self = arg[1]
+			local angel = arg[2]
+			
+			local rotateObj = self:GetObject("rotate")
+			rotateObj:SetAngel(angel)
+		</SetAngel>
+	</method_def>
+	<objtemplate>
+		<children>
+			<obj class="LayerObject">
+				<attr>
+					<width>father.width</width>
+					<height>father.height</height>
+					<clipsens>1</clipsens>
+				</attr>
+				<children>
+					<obj id="image" class="ImageObject">
+						<attr>
+							<top>1</top>
+							<left>58</left>
+							<width>13</width>
+							<height>129</height>
+						</attr>
+					</obj>
+					<obj id="rotate" class="RotateObject">
+						<attr>
+							<width>father.width</width>
+							<height>father.height</height>
+							<centerx>64</centerx>
+							<centery>64</centery>
+							<rotatemode>antialias</rotatemode>
+							<zorder>1</zorder>
+						</attr>
+					</obj>
+				</children>
+			</obj>
+		</children>
+		<eventlist>
+             <event name="OnInitControl">
+				local arg = {...}
+				local self = arg[1]
+				local rotateObj = self:GetObject("rotate")
+				
+				local attr = self:GetAttribute();
+				rotateObj:SetAngel(attr.Angel)
+				
+				local imageObj = self:GetObject("image")
+				imageObj:SetResID(attr.Image)
+				
+			 </event>
+        </eventlist>
+	</objtemplate>
+</control>
+	
+<objtreetemplate id="HelloBolt.Tree" class="ObjectTreeTemplate">
+	<attr>
+			<left>-200</left>
+			<top>-200</top>
+			<width>2000</width>
+			<height>2000</height>
+	</attr>								
+	<obj id="clock" class="ImageObject">
+		<attr>
+			<image>clock</image>
+		</attr>
+		<children>
+			<obj class="HostWndIconObject">
+				<attr>
+					<smallicon>wnd.small</smallicon>
+					<bigicon>wnd.big</bigicon>
+				</attr>
+			</obj>
+			<obj id="caption" class="CaptionObject">
+				<attr>
+					<width>father.width</width>
+					<height>father.height</height>
+					<zorder>-1000</zorder>
+				</attr>
+			</obj>
+			<obj id="h" class="ClockHands">
+				<attr>
+					<width>father.width</width>
+					<height>129</height>
+					<Angel>0</Angel>
+					<Image>clock_h</Image>
+				</attr>
+			</obj>
+			<obj id="m" class="ClockHands">
+				<attr>
+					<width>father.width</width>
+					<height>129</height>
+					<Angel>0</Angel>
+					<Image>clock_m</Image>
+					<zorder>1</zorder>
+				</attr>
+			</obj>
+			<obj id="s" class="ClockHands">
+				<attr>
+					<width>father.width</width>
+					<height>129</height>
+					<Angel>0</Angel>
+					<Image>clock_s</Image>
+					<zorder>2</zorder>
+				</attr>
+			</obj>
+			<obj class="ImageObject">
+				<attr>
+					<top>-1</top>
+					<left>58</left>
+					<width>13</width>
+					<height>129</height>
+					<image>clock_dot</image>
+					<zorder>3</zorder>
+					<halign>center</halign>
+				</attr>
+			</obj>
+		</children>
+		<eventlist>
+			<event name="OnInitControl">
+				local arg = {...}
+				local self = arg[1]
+				local hObj = self:GetObject("h")
+				local mObj = self:GetObject("m")
+				local sObj = self:GetObject("s")
+				local function OnTimer()
+					local h = os.date("%I")
+					local m = os.date("%M")
+					local s = os.date("%S")
+					
+					hObj:SetAngel(h * 360 /12 + m * 30 /60)
+					mObj:SetAngel((m + s/60) * 360 /60)
+					sObj:SetAngel(s * 360 /60)
+				end
+				
+				OnTimer()
+				SetTimer(OnTimer, 1000)
+			</event>
+		</eventlist>
+	</obj>
+</objtreetemplate>
+	
+<hostwndtemplate id="HelloBolt.Wnd" class="FrameHostWnd">
+		<attr> 
+			<title>Bolt</title>
+			<layered>1</layered>
+			<left>200</left> 
+			<top>100</top>
+			<width>130</width>
+			<height>130</height>
+			<topmost>1</topmost>
+			<visible>1</visible>
+			<enable>1</enable>
+			<maxbox>0</maxbox>
+			<minbox>0</minbox>
+			<minwidth>100</minwidth>
+			<minheight>72</minheight>
+			<maxwidth>1000</maxwidth>
+			<maxheight>720</maxheight>
+			<appwindow>1</appwindow>
+			<fps>30</fps>
+		</attr>
+		<eventlist>
+			<event name="OnSize" file="MainWnd.xml.lua" func="OnSize"/>
+			<event name="OnClose" file="MainWnd.xml.lua" func="OnClose"/>
+		</eventlist>
+</hostwndtemplate>
+</xlue>
