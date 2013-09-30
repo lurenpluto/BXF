@@ -23,7 +23,7 @@
 #ifndef __ICONRES_H__
 #define __ICONRES_H__
 
-#include <bxf/ExtResourceImpl.h>
+#include <BXF/ExtResourceImpl.h>
 #include <XLGraphicPlus.h>
 
 #define XLUE_EXTRES_ICON "icon"
