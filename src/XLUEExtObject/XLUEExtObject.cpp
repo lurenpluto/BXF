@@ -69,6 +69,10 @@ BOOL XLUE_STDCALL XLUE_RegisterObj( const char* lpCategory, const char* lpObjCla
 	{
 		ret = RotateObjectRegister::RegisterRotateObject();
 	}
+    else if (strcmp(lpObjClass, EXTCLASSNAME_SVGOBJECT) == 0)
+    {
+        ret = SvgObjectRegister::RegisterSvgObject();
+    }
 	else
 	{
 		assert(false);
@@ -88,6 +92,10 @@ BOOL XLUE_STDCALL XLUE_RegisterRes( const char* lpCategory, const char* lpResCla
 	{
 		ret = IconResRegister::RegisterIconRes();
 	}
+    else if (strcmp(lpResClass, XLUE_EXTRES_SVG) == 0)
+    {
+        ret = SvgResRegister::RegisterSvgRes();
+    }
 	else
 	{
 		assert(false);
