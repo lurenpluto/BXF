@@ -2,7 +2,7 @@
 #define __ICONRES_H__
 
 #include <bxf/ExtResourceImpl.h>
-#include "../../3rd/inc/svg/svg.h"
+#include "svg/svg.h"
 
 #define XLUE_EXTRES_SVG "svg"
 
