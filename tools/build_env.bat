@@ -125,6 +125,8 @@ xcopy /Y /E %local_bin_dir%\Debug %local_bin_dir%\ProductRelease
 
 call .\copy_extconfig.bat
 
+:拉取Svg相关文件
 
+call .\update_svg.bat
 
 pause
