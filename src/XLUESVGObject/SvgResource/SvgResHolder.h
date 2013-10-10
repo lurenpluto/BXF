@@ -14,6 +14,6 @@ public:
     }
 };
 
-typedef BaseResHolder<SVGResTraits> IconResHolder;
+typedef BaseResHolder<SVGResTraits> SVGResHolder;
 
 #endif // __ICONRESHOLDER_H__

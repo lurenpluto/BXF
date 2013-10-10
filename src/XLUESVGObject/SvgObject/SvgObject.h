@@ -47,6 +47,9 @@ private:
 
     wxImage m_imageCache;
     bool m_isDirty;
+    int m_destWidth;
+    int m_destHeight;
+    RECT m_srcRect;
 };
 
 #endif // __SVGOBJECT_H__

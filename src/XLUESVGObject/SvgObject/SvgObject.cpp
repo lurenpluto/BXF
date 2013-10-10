@@ -12,11 +12,16 @@ SVGObject::SVGObject( XLUE_LAYOUTOBJ_HANDLE hObj )
 , m_preserveAspectRatio(false)
 , m_enableSVGAlpha(true)
 , m_isDirty(true)
+, m_destWidth(0)
+, m_destHeight(0)
 {
     m_SVGRes.SetOwner(this);
     m_SVGRes.SetResFunc(&SVGObject::OnSVGResChange, NULL);
 
     m_SVGRes.SetResProvider(GetResProvider());
+
+    RECT initRect = {0};
+    m_srcRect = initRect;
 }
 
 SVGObject::~SVGObject(void)
@@ -70,6 +75,7 @@ XLUE_RESOURCE_HANDLE SVGObject::GetSVGRes()
 
 void SVGObject::OnSVGResChange()
 {
+    //资源改变时要重新绘制
     m_isDirty = true;
 }
 
@@ -90,6 +96,17 @@ void SVGObject::OnPaintEx( XL_BITMAP_HANDLE hBitmapDest, const RECT* lpDestClipR
     srcRect.SetY(lpSrcClipRect->top);
     srcRect.SetWidth(lpSrcClipRect->right - lpSrcClipRect->left);
     srcRect.SetHeight(lpSrcClipRect->bottom - lpSrcClipRect->top);
+
+    //当目标区域改变大小，或者源区域改变位置的时候，也要重新绘制
+    if (m_destWidth != lpDestClipRect->right-lpDestClipRect->left
+        || m_destHeight != lpDestClipRect->bottom-lpDestClipRect->top
+        || !RectHelper::EqualRect(&m_srcRect, lpSrcClipRect))
+    {
+        m_isDirty = true;
+        m_destWidth = lpDestClipRect->right-lpDestClipRect->left;
+        m_destHeight = m_destHeight != lpDestClipRect->bottom-lpDestClipRect->top;
+        m_srcRect = *lpSrcClipRect;
+    }
 
     if (m_isDirty)
     {
