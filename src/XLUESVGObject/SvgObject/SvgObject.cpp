@@ -91,6 +91,11 @@ void SVGObject::OnPaintEx( XL_BITMAP_HANDLE hBitmapDest, const RECT* lpDestClipR
     wxSVGDocument* pSVGDoc = (wxSVGDocument*)XLUE_GetResRealHandle(hRes);
     assert(pSVGDoc);
 
+    if (pSVGDoc == NULL)
+    {
+        return;
+    }
+
     wxSVGRect srcRect;
     srcRect.SetX(lpSrcClipRect->left);
     srcRect.SetY(lpSrcClipRect->top);

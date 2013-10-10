@@ -52,6 +52,7 @@ private:
 private:
 
     bool m_resLoaded;
+    bool m_resLoadRet;
     wxSVGDocument* m_pSVGDoc;
 
     SVGSourceType m_sourceType;

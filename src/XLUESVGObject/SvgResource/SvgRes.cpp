@@ -26,7 +26,6 @@ SVGRes::~SVGRes(void)
 bool SVGRes::LoadRes(const wchar_t* lpResFolder)
 {
     assert(lpResFolder);
-    assert(!m_resLoaded);
 
     if (lpResFolder != NULL)
     {
@@ -38,17 +37,19 @@ bool SVGRes::LoadRes(const wchar_t* lpResFolder)
         FreeImpl();
     }
 
-    m_resLoaded = true;
-
     bool ret = LoadImpl(lpResFolder);
     assert(ret);
+
+    if (ret)
+    {
+        m_resLoaded = true;
+    }
 
     return ret;
 }
 
 bool SVGRes::FreeRes()
 {
-    assert(m_resLoaded);
     m_resLoaded = false;
 
     if (m_pSVGDoc != NULL)
@@ -92,6 +93,12 @@ bool SVGRes::LoadImpl(const wchar_t* lpResFolder)
         assert(false);
     }
 
+    if (!ret && m_pSVGDoc)
+    {
+        delete m_pSVGDoc;
+        m_pSVGDoc = NULL;
+    }
+
     return ret;
 }
 
@@ -99,10 +106,12 @@ wxSVGDocument* SVGRes::GetSVGHandle()
 {
     if (!m_resLoaded)
     {
-        m_resLoaded = true;
         assert(!m_resFolder.empty());
 
-        LoadImpl(m_resFolder.c_str());
+        if (LoadImpl(m_resFolder.c_str()))
+        {
+            m_resLoaded = true;
+        }
     }
 
     return m_pSVGDoc;
