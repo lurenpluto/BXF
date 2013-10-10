@@ -9,17 +9,17 @@
 
 #include "./SvgObject.h"
 
-class SvgObjectParser
-	: public ExtObjParserImpl<SvgObject>
+class SVGObjectParser
+	: public ExtObjParserImpl<SVGObject>
 {
 public:
-	SvgObjectParser(void);
-	virtual ~SvgObjectParser(void);
+	SVGObjectParser(void);
+	virtual ~SVGObjectParser(void);
 
 private:
 
 	// ExtObjParserImpl
-	virtual bool ParserAttribute(SvgObject* lpObj, const char* key, const char* value);
+	virtual bool ParserAttribute(SVGObject* lpObj, const char* key, const char* value);
 };
 
 #endif // __SVGOBJECTPARSER_H__

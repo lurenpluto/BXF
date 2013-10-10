@@ -6,15 +6,15 @@
 #include "stdafx.h"
 #include "./SvgResParser.h"
 
-SvgResParser::SvgResParser(void)
+SVGResParser::SVGResParser(void)
 {
 }
 
-SvgResParser::~SvgResParser(void)
+SVGResParser::~SVGResParser(void)
 {
 }
 
-bool SvgResParser::ParseAttributeFromXML( SvgRes* lpResObj, const char* lpName, const char* lpValue )
+bool SVGResParser::ParseAttributeFromXML( SVGRes* lpResObj, const char* lpName, const char* lpValue )
 {
     assert(lpResObj);
     assert(lpName);
@@ -34,7 +34,7 @@ bool SvgResParser::ParseAttributeFromXML( SvgRes* lpResObj, const char* lpName, 
     return ret;
 }
 
-bool SvgResParser::ParseAttributeFromLua( SvgRes* lpResObj, const char* lpName, lua_State* luaState, int index )
+bool SVGResParser::ParseAttributeFromLua( SVGRes* lpResObj, const char* lpName, lua_State* luaState, int index )
 {
     assert(lpResObj);
     assert(lpName);

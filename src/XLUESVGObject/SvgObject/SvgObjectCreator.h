@@ -8,17 +8,17 @@
 
 #include "./SvgObject.h"
 
-class SvgObjectCreator
-	: public ExtObjCreatorImpl<SvgObject>
+class SVGObjectCreator
+	: public ExtObjCreatorImpl<SVGObject>
 {
 public:
-	SvgObjectCreator(void);
-	virtual ~SvgObjectCreator(void);
+	SVGObjectCreator(void);
+	virtual ~SVGObjectCreator(void);
 
 private:
 
-	virtual SvgObject* CreateObj(const char* lpObjClass, XLUE_LAYOUTOBJ_HANDLE hObj);
-	virtual void DestroyObj(SvgObject* lpObj);
+	virtual SVGObject* CreateObj(const char* lpObjClass, XLUE_LAYOUTOBJ_HANDLE hObj);
+	virtual void DestroyObj(SVGObject* lpObj);
 };
 
 #endif // __SVGOBJECTCREATOR_H__

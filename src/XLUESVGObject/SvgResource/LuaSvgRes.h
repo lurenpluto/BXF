@@ -3,12 +3,12 @@
 
 #include "./SvgRes.h"
 
-class LuaSvgRes
-    : public ExtResourceLuaHostImplEx<LuaSvgRes, SvgRes>
+class LuaSVGRes
+    : public ExtResourceLuaHostImplEx<LuaSVGRes, SVGRes>
 {
 public:
-    LuaSvgRes(void);
-    virtual ~LuaSvgRes(void);
+    LuaSVGRes(void);
+    virtual ~LuaSVGRes(void);
 
 public:
 

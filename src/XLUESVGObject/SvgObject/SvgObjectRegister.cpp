@@ -10,10 +10,10 @@
 #include "./SvgObjectParser.h"
 #include "./LuaSvgObject.h"
 
-BOOL SvgObjectRegister::RegisterSvgObject()
+BOOL SVGObjectRegister::RegisterSVGObject()
 {
 	unsigned long attribute = ExtObjAttribute_clipsens;
 
-	return ExtObjRegisterHelper<ExtObjType_renderableObj, SvgObject, SvgObjectCreator, 
-		SvgObjectParser, LuaSvgObject>::Register(EXTCLASSNAME_SVGOBJECT, attribute);
+	return ExtObjRegisterHelper<ExtObjType_renderableObj, SVGObject, SVGObjectCreator, 
+		SVGObjectParser, LuaSVGObject>::Register(EXTCLASSNAME_SVGOBJECT, attribute);
 }

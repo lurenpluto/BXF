@@ -7,23 +7,23 @@
 #include "./SvgRes.h"
 #include <shlwapi.h>
 
-SvgRes::SvgRes(XLUE_RESOURCE_HANDLE hResHandle)
+SVGRes::SVGRes(XLUE_RESOURCE_HANDLE hResHandle)
 :base_class(hResHandle),
 m_resLoaded(false),
-m_pSvgDoc(NULL),
-m_sourceType(SvgSourceType_unknown)
+m_pSVGDoc(NULL),
+m_sourceType(SVGSourceType_unknown)
 {
 }
 
-SvgRes::~SvgRes(void)
+SVGRes::~SVGRes(void)
 {
-    if (m_pSvgDoc != NULL)
+    if (m_pSVGDoc != NULL)
     {
         FreeImpl();
     }
 }
 
-bool SvgRes::LoadRes(const wchar_t* lpResFolder)
+bool SVGRes::LoadRes(const wchar_t* lpResFolder)
 {
     assert(lpResFolder);
     assert(!m_resLoaded);
@@ -33,7 +33,7 @@ bool SvgRes::LoadRes(const wchar_t* lpResFolder)
         m_resFolder = lpResFolder;
     }
 
-    if (m_pSvgDoc != NULL)
+    if (m_pSVGDoc != NULL)
     {
         FreeImpl();
     }
@@ -46,33 +46,33 @@ bool SvgRes::LoadRes(const wchar_t* lpResFolder)
     return ret;
 }
 
-bool SvgRes::FreeRes()
+bool SVGRes::FreeRes()
 {
     assert(m_resLoaded);
     m_resLoaded = false;
 
-    if (m_pSvgDoc != NULL)
+    if (m_pSVGDoc != NULL)
     {
         FreeImpl();
     }
 
-    assert(m_pSvgDoc == NULL);
+    assert(m_pSVGDoc == NULL);
 
     return true;
 }
 
-bool SvgRes::LoadImpl(const wchar_t* lpResFolder)
+bool SVGRes::LoadImpl(const wchar_t* lpResFolder)
 {
-    assert(m_sourceType != SvgSourceType_unknown);
-    assert(m_pSvgDoc == NULL);
+    assert(m_sourceType != SVGSourceType_unknown);
+    assert(m_pSVGDoc == NULL);
     assert(lpResFolder);
 
     bool ret = false;
 
     std::wstring file;
-    XLUETranscode::UTF8_to_Unicode(m_SvgFile.c_str(), m_SvgFile.size(), file);
+    XLUETranscode::UTF8_to_Unicode(m_SVGFile.c_str(), m_SVGFile.size(), file);
 
-    if (m_sourceType == SvgSourceType_file)
+    if (m_sourceType == SVGSourceType_file)
     {
         if (::PathIsRelative(file.c_str()))
         {
@@ -82,10 +82,10 @@ bool SvgRes::LoadImpl(const wchar_t* lpResFolder)
         }
     }
 
-    if (m_sourceType == SvgSourceType_file)
+    if (m_sourceType == SVGSourceType_file)
     {
-        m_pSvgDoc = new wxSVGDocument();
-        ret = m_pSvgDoc->Load(file);
+        m_pSVGDoc = new wxSVGDocument();
+        ret = m_pSVGDoc->Load(file);
     }
     else
     {
@@ -95,7 +95,7 @@ bool SvgRes::LoadImpl(const wchar_t* lpResFolder)
     return ret;
 }
 
-wxSVGDocument* SvgRes::GetSvgHandle()
+wxSVGDocument* SVGRes::GetSVGHandle()
 {
     if (!m_resLoaded)
     {
@@ -105,39 +105,39 @@ wxSVGDocument* SvgRes::GetSvgHandle()
         LoadImpl(m_resFolder.c_str());
     }
 
-    return m_pSvgDoc;
+    return m_pSVGDoc;
 }
 
-void SvgRes::FreeImpl()
+void SVGRes::FreeImpl()
 {
-    assert(m_pSvgDoc);
-    if (m_pSvgDoc != NULL)
+    assert(m_pSVGDoc);
+    if (m_pSVGDoc != NULL)
     {
-        delete m_pSvgDoc;
-        m_pSvgDoc = NULL;
+        delete m_pSVGDoc;
+        m_pSVGDoc = NULL;
     }
 }
 
-void SvgRes::SetFile( const char* lpFile )
+void SVGRes::SetFile( const char* lpFile )
 {
     assert(lpFile);
-    assert(m_sourceType == SvgSourceType_unknown);
+    assert(m_sourceType == SVGSourceType_unknown);
 
-    m_sourceType = SvgSourceType_file;
-    m_SvgFile = lpFile;
+    m_sourceType = SVGSourceType_file;
+    m_SVGFile = lpFile;
 }
 
-void* SvgRes::GetRealHandle()
+void* SVGRes::GetRealHandle()
 {
-    return (void*)GetSvgHandle();
+    return (void*)GetSVGHandle();
 }
 
-long SvgRes::AddRefRealHandle( void* lpRealHandle )
+long SVGRes::AddRefRealHandle( void* lpRealHandle )
 {
     return 0;
 }
 
-long SvgRes::ReleaseRealHandle( void* lpRealHandle )
+long SVGRes::ReleaseRealHandle( void* lpRealHandle )
 {
     return 0;
 }

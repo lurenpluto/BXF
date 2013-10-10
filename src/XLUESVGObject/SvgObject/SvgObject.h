@@ -8,28 +8,28 @@
 
 #include "../SvgResource/SvgResHolder.h"
 
-class SvgObject
+class SVGObject
 	: public ExtLayoutObjMethodsImpl
 {
 public:
-    typedef BaseResHolderEx<SvgObject, SvgResTraits> SvgResHolderEx;
+    typedef BaseResHolderEx<SVGObject, SVGResTraits> SVGResHolderEx;
 public:
 
-	SvgObject(XLUE_LAYOUTOBJ_HANDLE hObj);
-	virtual ~SvgObject(void);
+	SVGObject(XLUE_LAYOUTOBJ_HANDLE hObj);
+	virtual ~SVGObject(void);
 
-	void SetSvgResID(const char* resID);
-	const char* GetSvgResID() const;
+	void SetSVGResID(const char* resID);
+	const char* GetSVGResID() const;
 
     void SetPreserveAspectRatio(bool preserveAspectRatio);
     bool GetPreserveAspectRatio();
 
-    void SetEnableSvgAlpha(bool enableSvgAlpha);
-    bool GetEnableSvgAlpha();
+    void SetEnableSVGAlpha(bool enableSVGAlpha);
+    bool GetEnableSVGAlpha();
 
-    void SetSvgRes(XLUE_RESOURCE_HANDLE hResHandle);
+    void SetSVGRes(XLUE_RESOURCE_HANDLE hResHandle);
     // 返回值不增持引用计数
-    XLUE_RESOURCE_HANDLE GetSvgRes();
+    XLUE_RESOURCE_HANDLE GetSVGRes();
 
 public:
 
@@ -39,11 +39,14 @@ public:
 	virtual void OnPaintEx(XL_BITMAP_HANDLE hBitmapDest, const RECT* lpDestClipRect, const RECT* lpSrcClipRect, unsigned char alpha, XLGraphicHint* lpHint);
 
 private:
-    void OnSvgResChange();
+    void OnSVGResChange();
 
-    SvgResHolderEx m_SvgRes;
+    SVGResHolderEx m_SVGRes;
     bool m_preserveAspectRatio;
-    bool m_enableSvgAlpha;
+    bool m_enableSVGAlpha;
+
+    wxImage m_imageCache;
+    bool m_isDirty;
 };
 
 #endif // __SVGOBJECT_H__

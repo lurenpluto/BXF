@@ -6,13 +6,13 @@
 #ifndef __SVGOBJECTREGISTER_H__
 #define __SVGOBJECTREGISTER_H__
 
-#define EXTCLASSNAME_SVGOBJECT "SvgObject"
+#define EXTCLASSNAME_SVGOBJECT "SVGObject"
 
-class SvgObjectRegister
+class SVGObjectRegister
 {
 public:
 
-	static BOOL RegisterSvgObject();
+	static BOOL RegisterSVGObject();
 };
 
 #endif // __SVGOBJECTREGISTER_H__

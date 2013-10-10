@@ -43,7 +43,7 @@ BOOL XLUE_STDCALL XLUE_RegisterObj( const char* lpCategory, const char* lpObjCla
 
     if (strcmp(lpObjClass, EXTCLASSNAME_SVGOBJECT) == 0)
     {
-        ret = SvgObjectRegister::RegisterSvgObject();
+        ret = SVGObjectRegister::RegisterSVGObject();
     }
     else
     {
@@ -62,7 +62,7 @@ BOOL XLUE_STDCALL XLUE_RegisterRes( const char* lpCategory, const char* lpResCla
 
     if (strcmp(lpResClass, XLUE_EXTRES_SVG) == 0)
     {
-        ret = SvgResRegister::RegisterSvgRes();
+        ret = SVGResRegister::RegisterSVGRes();
     }
     else
     {

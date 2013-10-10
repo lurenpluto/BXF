@@ -8,28 +8,28 @@
 
 using namespace Xunlei::Bolt;
 
-class SvgRes
+class SVGRes
     : public ExtResourceMethodsImpl
 {
 public:
 
-    enum SvgSourceType
+    enum SVGSourceType
     {
-        SvgSourceType_unknown = 0,
-        SvgSourceType_file = 1,
-        SvgSourceType_string = 2,
+        SVGSourceType_unknown = 0,
+        SVGSourceType_file = 1,
+        SVGSourceType_string = 2,
     };
 
     typedef ExtResourceMethodsImpl base_class;
 
 public:
-    SvgRes(XLUE_RESOURCE_HANDLE hResHandle);
-    ~SvgRes(void);
+    SVGRes(XLUE_RESOURCE_HANDLE hResHandle);
+    ~SVGRes(void);
 
     void SetFile(const char* lpFile);
 
     // 返回值不会增持引用计数
-    wxSVGDocument* GetSvgHandle();
+    wxSVGDocument* GetSVGHandle();
 
 private:
 
@@ -52,10 +52,10 @@ private:
 private:
 
     bool m_resLoaded;
-    wxSVGDocument* m_pSvgDoc;
+    wxSVGDocument* m_pSVGDoc;
 
-    SvgSourceType m_sourceType;
-    std::string m_SvgFile;
+    SVGSourceType m_sourceType;
+    std::string m_SVGFile;
 
     std::wstring m_resFolder;
 };

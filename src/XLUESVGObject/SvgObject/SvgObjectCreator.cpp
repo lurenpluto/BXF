@@ -6,23 +6,23 @@
 #include "stdafx.h"
 #include "./SvgObjectCreator.h"
 
-SvgObjectCreator::SvgObjectCreator(void)
+SVGObjectCreator::SVGObjectCreator(void)
 {
 }
 
-SvgObjectCreator::~SvgObjectCreator(void)
+SVGObjectCreator::~SVGObjectCreator(void)
 {
 }
 
-SvgObject* SvgObjectCreator::CreateObj( const char* lpObjClass, XLUE_LAYOUTOBJ_HANDLE hObj )
+SVGObject* SVGObjectCreator::CreateObj( const char* lpObjClass, XLUE_LAYOUTOBJ_HANDLE hObj )
 {
 	assert(hObj);
 	assert(lpObjClass);
 
-	return new SvgObject(hObj);
+	return new SVGObject(hObj);
 }
 
-void SvgObjectCreator::DestroyObj( SvgObject* lpObj )
+void SVGObjectCreator::DestroyObj( SVGObject* lpObj )
 {
 	assert(lpObj);
 

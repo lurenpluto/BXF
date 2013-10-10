@@ -3,18 +3,18 @@
 
 #include "./SvgRes.h"
 
-class SvgResParser
-    : public ExtResourceParserImplEx<SvgRes>
+class SVGResParser
+    : public ExtResourceParserImplEx<SVGRes>
 {
 public:
-    SvgResParser(void);
-    virtual ~SvgResParser(void);
+    SVGResParser(void);
+    virtual ~SVGResParser(void);
 
 private:
 
     // ExtResourceParserImpl
-    virtual bool ParseAttributeFromXML(SvgRes* lpResObj, const char* lpName, const char* lpValue);
-    virtual bool ParseAttributeFromLua(SvgRes* lpResObj, const char* lpName, lua_State* luaState, int index);
+    virtual bool ParseAttributeFromXML(SVGRes* lpResObj, const char* lpName, const char* lpValue);
+    virtual bool ParseAttributeFromLua(SVGRes* lpResObj, const char* lpName, lua_State* luaState, int index);
 
 };
 

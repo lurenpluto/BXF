@@ -6,44 +6,48 @@
 #include "stdafx.h"
 #include "./LuaSvgObject.h"
 
-LuaSvgObject::LuaSvgObject(void)
+LuaSVGObject::LuaSVGObject(void)
 {
 }
 
-LuaSvgObject::~LuaSvgObject(void)
+LuaSVGObject::~LuaSVGObject(void)
 {
 }
 
-const XLLRTGlobalAPI LuaSvgObject::s_szLuaMemberFuncs[] = 
+const XLLRTGlobalAPI LuaSVGObject::s_szLuaMemberFuncs[] = 
 {
-	{"GetSvgResID", GetSvgResID},
-	{"SetSvgResID", SetSvgResID},
-    {"GetSvgRes", GetSvgRes},
-    {"SetSvgRes", SetSvgRes},
+	{"GetSVGResID", GetSVGResID},
+	{"SetSVGResID", SetSVGResID},
+    {"GetSVGRes", GetSVGRes},
+    {"SetSVGRes", SetSVGRes},
+    {"SetPreserveAspectRatio", SetPreserveAspectRatio},
+    {"GetPreserveAspectRatio", GetPreserveAspectRatio},
+    {"SetEnableSVGAlpha", SetEnableSVGAlpha},
+    {"GetEnableSVGAlpha", GetEnableSVGAlpha},
 	{NULL, NULL},
 };
 
-int LuaSvgObject::SetSvgResID( lua_State* luaState )
+int LuaSVGObject::SetSVGResID( lua_State* luaState )
 {
-	SvgObject* lpExtObj = CheckExtObject(luaState, 1);
+	SVGObject* lpExtObj = CheckExtObject(luaState, 1);
 	if (lpExtObj != NULL)
 	{
-		const char* lpSvgResID = luaL_checkstring(luaState, 2);
+		const char* lpSVGResID = luaL_checkstring(luaState, 2);
 		
-		lpExtObj->SetSvgResID(lpSvgResID);
+		lpExtObj->SetSVGResID(lpSVGResID);
 	}
 
 	return 0;
 }
 
-int LuaSvgObject::GetSvgResID( lua_State* luaState )
+int LuaSVGObject::GetSVGResID( lua_State* luaState )
 {
-	SvgObject* lpExtObj = CheckExtObject(luaState, 1);
+	SVGObject* lpExtObj = CheckExtObject(luaState, 1);
 	if (lpExtObj != NULL)
 	{
-		const char* lpSvgResID = lpExtObj->GetSvgResID();
+		const char* lpSVGResID = lpExtObj->GetSVGResID();
 
-		lua_pushstring(luaState, lpSvgResID);
+		lua_pushstring(luaState, lpSVGResID);
 
 		return 1;
 	}
@@ -51,15 +55,15 @@ int LuaSvgObject::GetSvgResID( lua_State* luaState )
 	return 0;
 }
 
-int LuaSvgObject::SetSvgRes( lua_State* luaState )
+int LuaSVGObject::SetSVGRes( lua_State* luaState )
 {
-    SvgObject* lpObj = CheckExtObject(luaState, 1);
+    SVGObject* lpObj = CheckExtObject(luaState, 1);
     if (lpObj != NULL)
     {
         XLUE_RESOURCE_HANDLE hResHandle = NULL;
         XLUE_CheckResEx(luaState, 2, XLUE_EXTRES_SVG, &hResHandle);
 
-        lpObj->SetSvgRes(hResHandle);
+        lpObj->SetSVGRes(hResHandle);
 
         if (hResHandle != NULL)
         {
@@ -70,12 +74,12 @@ int LuaSvgObject::SetSvgRes( lua_State* luaState )
     return 0;
 }
 
-int LuaSvgObject::GetSvgRes( lua_State* luaState )
+int LuaSVGObject::GetSVGRes( lua_State* luaState )
 {
-    SvgObject* lpObj = CheckExtObject(luaState, 1);
+    SVGObject* lpObj = CheckExtObject(luaState, 1);
     if (lpObj != NULL)
     {
-        XLUE_RESOURCE_HANDLE hResHandle = lpObj->GetSvgRes();
+        XLUE_RESOURCE_HANDLE hResHandle = lpObj->GetSVGRes();
 
         XLUE_PushRes(luaState, hResHandle);
 
@@ -84,4 +88,60 @@ int LuaSvgObject::GetSvgRes( lua_State* luaState )
 
     lua_pushnil(luaState);
     return 1;
+}
+
+int LuaSVGObject::SetPreserveAspectRatio(lua_State* luaState)
+{
+    SVGObject* lpObj = CheckExtObject(luaState, 1);
+    if (lpObj != NULL)
+    {
+        bool preserveAspectRatio = !!lua_toboolean(luaState, 2);
+
+        lpObj->SetPreserveAspectRatio(preserveAspectRatio);
+    }
+
+    return 0;
+}
+
+int LuaSVGObject::GetPreserveAspectRatio( lua_State* luaState )
+{
+    SVGObject* lpExtObj = CheckExtObject(luaState, 1);
+    if (lpExtObj != NULL)
+    {
+        bool preserveAspectRatio = lpExtObj->GetPreserveAspectRatio();
+
+        lua_pushboolean(luaState, preserveAspectRatio);
+
+        return 1;
+    }
+
+    return 0;
+}
+
+int LuaSVGObject::SetEnableSVGAlpha(lua_State* luaState)
+{
+    SVGObject* lpObj = CheckExtObject(luaState, 1);
+    if (lpObj != NULL)
+    {
+        bool enableSVGAlpha = !!lua_toboolean(luaState, 2);
+
+        lpObj->SetEnableSVGAlpha(enableSVGAlpha);
+    }
+
+    return 0;
+}
+
+int LuaSVGObject::GetEnableSVGAlpha( lua_State* luaState )
+{
+    SVGObject* lpExtObj = CheckExtObject(luaState, 1);
+    if (lpExtObj != NULL)
+    {
+        bool enableSVGAlpha = lpExtObj->GetEnableSVGAlpha();
+
+        lua_pushboolean(luaState, enableSVGAlpha);
+
+        return 1;
+    }
+
+    return 0;
 }

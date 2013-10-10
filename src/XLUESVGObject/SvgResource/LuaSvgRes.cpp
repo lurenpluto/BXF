@@ -6,15 +6,15 @@
 #include "stdafx.h"
 #include "./LuaSvgRes.h"
 
-XLLRTGlobalAPI LuaSvgRes::s_szLuaMemberFuncs[] = 
+XLLRTGlobalAPI LuaSVGRes::s_szLuaMemberFuncs[] = 
 {
     {NULL, NULL}
 };
 
-LuaSvgRes::LuaSvgRes(void)
+LuaSVGRes::LuaSVGRes(void)
 {
 }
 
-LuaSvgRes::~LuaSvgRes(void)
+LuaSVGRes::~LuaSVGRes(void)
 {
 }

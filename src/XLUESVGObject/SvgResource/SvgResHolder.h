@@ -3,8 +3,8 @@
 
 #include "./SvgRes.h"
 
-class SvgResTraits
-    : public ExtResTraits<SvgResTraits>
+class SVGResTraits
+    : public ExtResTraits<SVGResTraits>
 {
 public:
 
@@ -14,6 +14,6 @@ public:
     }
 };
 
-typedef BaseResHolder<SvgResTraits> IconResHolder;
+typedef BaseResHolder<SVGResTraits> IconResHolder;
 
 #endif // __ICONRESHOLDER_H__

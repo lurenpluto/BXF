@@ -8,20 +8,26 @@
 
 #include "./SvgObject.h"
 
-class LuaSvgObject
-	: public ExtObjLuaHostImplEx<LuaSvgObject, SvgObject>
+class LuaSVGObject
+	: public ExtObjLuaHostImplEx<LuaSVGObject, SVGObject>
 {
 public:
-	LuaSvgObject(void);
-	virtual ~LuaSvgObject(void);
+	LuaSVGObject(void);
+	virtual ~LuaSVGObject(void);
 
 private:
 
-	static int SetSvgResID(lua_State* luaState);
-	static int GetSvgResID(lua_State* luaState);
+	static int SetSVGResID(lua_State* luaState);
+	static int GetSVGResID(lua_State* luaState);
 
-    static int SetSvgRes(lua_State* luaState);
-    static int GetSvgRes(lua_State* luaState);
+    static int SetSVGRes(lua_State* luaState);
+    static int GetSVGRes(lua_State* luaState);
+
+    static int SetPreserveAspectRatio(lua_State* luaState);
+    static int GetPreserveAspectRatio(lua_State* luaState);
+
+    static int SetEnableSVGAlpha(lua_State* luaState);
+    static int GetEnableSVGAlpha(lua_State* luaState);
 
 public:
 

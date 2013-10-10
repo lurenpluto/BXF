@@ -3,18 +3,18 @@
 
 #include "./SvgRes.h"
 
-class SvgResCreator
-    : public ExtResourceCreatorImpl<SvgRes>
+class SVGResCreator
+    : public ExtResourceCreatorImpl<SVGRes>
 {
 public:
-    SvgResCreator(void);
-    virtual ~SvgResCreator(void);
+    SVGResCreator(void);
+    virtual ~SVGResCreator(void);
 
 private:
 
     // ExtResourceCreatorImpl
-    virtual SvgRes* CreateResource(const char* lpResType, XLUE_RESOURCE_HANDLE hResHandle);
-    virtual void DestroyResource(SvgRes* lpResObj);
+    virtual SVGRes* CreateResource(const char* lpResType, XLUE_RESOURCE_HANDLE hResHandle);
+    virtual void DestroyResource(SVGRes* lpResObj);
 };
 
 #endif // __ICONRESCREATOR_H__

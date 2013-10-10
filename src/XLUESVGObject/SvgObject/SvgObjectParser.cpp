@@ -7,15 +7,15 @@
 #include "./SvgObjectParser.h"
 #include "./LuaSvgObject.h"
 
-SvgObjectParser::SvgObjectParser(void)
+SVGObjectParser::SVGObjectParser(void)
 {
 }
 
-SvgObjectParser::~SvgObjectParser(void)
+SVGObjectParser::~SVGObjectParser(void)
 {
 }
 
-bool SvgObjectParser::ParserAttribute( SvgObject* lpObj, const char* key, const char* value )
+bool SVGObjectParser::ParserAttribute( SVGObject* lpObj, const char* key, const char* value )
 {
 	assert(lpObj);
 	assert(key);
@@ -24,7 +24,7 @@ bool SvgObjectParser::ParserAttribute( SvgObject* lpObj, const char* key, const 
 	bool ret = true;
 	if (strcmp(key, "svgres") == 0)
 	{
-		lpObj->SetSvgResID(value);
+		lpObj->SetSVGResID(value);
 	}
     else if (strcmp(key, "preserveAspectRatio") == 0)
     {
@@ -41,11 +41,11 @@ bool SvgObjectParser::ParserAttribute( SvgObject* lpObj, const char* key, const 
     {
         if (strcmp(value, "false") == 0)
         {
-            lpObj->SetEnableSvgAlpha(false);
+            lpObj->SetEnableSVGAlpha(false);
         }
         else
         {
-            lpObj->SetEnableSvgAlpha(true);
+            lpObj->SetEnableSVGAlpha(true);
         }
     }
 	else

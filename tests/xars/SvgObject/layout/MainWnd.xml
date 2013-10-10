@@ -22,7 +22,7 @@
 					<zorder>-1000</zorder>
 				</attr>
 			</obj>
-			<obj class="SvgObject">
+			<obj class="SVGObject">
 				<attr>
 					<left>5</left>
 					<top>5</top>

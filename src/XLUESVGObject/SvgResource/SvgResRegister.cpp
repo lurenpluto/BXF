@@ -9,7 +9,7 @@
 #include "./SvgResParser.h"
 #include "./LuaSvgRes.h"
 
-bool SvgResRegister::RegisterSvgRes()
+bool SVGResRegister::RegisterSVGRes()
 {
-    return ExtResourceRegisterHelper<SvgRes, SvgResCreator, SvgResParser, LuaSvgRes>::Register(XLUE_EXTRES_SVG, 0);
+    return ExtResourceRegisterHelper<SVGRes, SVGResCreator, SVGResParser, LuaSVGRes>::Register(XLUE_EXTRES_SVG, 0);
 }

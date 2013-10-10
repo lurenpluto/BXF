@@ -3,11 +3,11 @@
 
 #include "./SvgRes.h"
 
-class SvgResRegister
+class SVGResRegister
 {
 public:
 
-    static bool RegisterSvgRes();
+    static bool RegisterSVGRes();
 };
 
 #endif // __SVGRESREGISTER_H__

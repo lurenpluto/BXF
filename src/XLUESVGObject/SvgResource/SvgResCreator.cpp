@@ -6,26 +6,26 @@
 #include "stdafx.h"
 #include "./SvgResCreator.h"
 
-SvgResCreator::SvgResCreator(void)
+SVGResCreator::SVGResCreator(void)
 {
 }
 
-SvgResCreator::~SvgResCreator(void)
+SVGResCreator::~SVGResCreator(void)
 {
 }
 
-SvgRes* SvgResCreator::CreateResource( const char* lpResType, XLUE_RESOURCE_HANDLE hResHandle )
+SVGRes* SVGResCreator::CreateResource( const char* lpResType, XLUE_RESOURCE_HANDLE hResHandle )
 {
     assert(lpResType);
     assert(strcmp(XLUE_EXTRES_SVG, lpResType) == 0);
     assert(hResHandle);
 
-    SvgRes* lpResObj = new SvgRes(hResHandle);
+    SVGRes* lpResObj = new SVGRes(hResHandle);
 
     return lpResObj;
 }
 
-void SvgResCreator::DestroyResource( SvgRes* lpResObj )
+void SVGResCreator::DestroyResource( SVGRes* lpResObj )
 {
     assert(lpResObj);
 
