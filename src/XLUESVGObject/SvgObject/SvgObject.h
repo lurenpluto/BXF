@@ -37,6 +37,7 @@ public:
 
 	// 该对象是剪裁敏感的，所以需要配合LayerObject+clipsens使用
 	virtual void OnPaintEx(XL_BITMAP_HANDLE hBitmapDest, const RECT* lpDestClipRect, const RECT* lpSrcClipRect, unsigned char alpha, XLGraphicHint* lpHint);
+    virtual void OnAbsPosChanged(const RECT* lpOldAbsPos, const RECT* lpNewAbsPos);
 
 private:
     void OnSVGResChange();
@@ -47,9 +48,8 @@ private:
 
     wxImage m_imageCache;
     bool m_isDirty;
-    int m_destWidth;
-    int m_destHeight;
-    RECT m_srcRect;
+    int m_objWidth;
+    int m_objHeight;
 };
 
 #endif // __SVGOBJECT_H__

@@ -613,6 +613,42 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="DirtyRectObject"
+			>
+			<File
+				RelativePath=".\DirtyRectObject\DirtyRectObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DirtyRectObject\DirtyRectObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DirtyRectObject\DirtyRectObjectCreator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DirtyRectObject\DirtyRectObjectCreator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DirtyRectObject\DirtyRectObjectParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DirtyRectObject\DirtyRectObjectParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DirtyRectObject\DirtyRectObjectRegister.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\DirtyRectObject\DirtyRectObjectRegister.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

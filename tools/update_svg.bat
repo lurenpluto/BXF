@@ -35,4 +35,10 @@ set svglib_url=%svg_url%/lib
 
 %svn_tool% export --force -r %svg_ver% %svglib_url% %third_lib_dir%
 
+:拉取其他三方库文件
+
+set thirdlib_url=https://github.com/lurenpluto/BXF_3RD/trunk/3rd_lib
+
+%svn_tool% export --force -r %svg_ver% %thirdlib_url% %third_lib_dir%
+
 pause
