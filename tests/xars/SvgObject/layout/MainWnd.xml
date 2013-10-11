@@ -22,6 +22,15 @@
 					<zorder>-1000</zorder>
 				</attr>
 			</obj>
+			<obj class="DirtyRectObject">
+				<attr>
+					<left>5</left>
+					<top>5</top>
+					<width>300</width>
+					<height>300</height>
+					<geninterval>200</geninterval>
+				</attr>
+			</obj>
 			<obj class="SVGObject">
 				<attr>
 					<left>5</left>

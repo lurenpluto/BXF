@@ -51,8 +51,8 @@ int LuaSVGObject::GetSVGResID( lua_State* luaState )
 
 		return 1;
 	}
-
-	return 0;
+    lua_pushnil(luaState);
+	return 1;
 }
 
 int LuaSVGObject::SetSVGRes( lua_State* luaState )
@@ -115,7 +115,8 @@ int LuaSVGObject::GetPreserveAspectRatio( lua_State* luaState )
         return 1;
     }
 
-    return 0;
+    lua_pushboolean(luaState, false);
+    return 1;
 }
 
 int LuaSVGObject::SetEnableSVGAlpha(lua_State* luaState)
@@ -142,6 +143,6 @@ int LuaSVGObject::GetEnableSVGAlpha( lua_State* luaState )
 
         return 1;
     }
-
-    return 0;
+    lua_pushboolean(luaState, false);
+    return 1;
 }
