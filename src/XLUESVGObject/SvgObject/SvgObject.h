@@ -35,12 +35,13 @@ public:
 
 	// ExtLayoutObjMethodsImpl virtual funtions
 
-	// 该对象是剪裁敏感的，所以需要配合LayerObject+clipsens使用
 	virtual void OnPaintEx(XL_BITMAP_HANDLE hBitmapDest, const RECT* lpDestClipRect, const RECT* lpSrcClipRect, unsigned char alpha, XLGraphicHint* lpHint);
     virtual void OnAbsPosChanged(const RECT* lpOldAbsPos, const RECT* lpNewAbsPos);
 
 private:
     void OnSVGResChange();
+
+private:
 
     SVGResHolderEx m_SVGRes;
     bool m_preserveAspectRatio;

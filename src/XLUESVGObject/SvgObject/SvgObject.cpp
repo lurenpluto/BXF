@@ -91,6 +91,12 @@ void SVGObject::OnAbsPosChanged(const RECT* lpOldAbsPos, const RECT* lpNewAbsPos
 void SVGObject::OnPaintEx( XL_BITMAP_HANDLE hBitmapDest, const RECT* lpDestClipRect, const RECT* lpSrcClipRect, unsigned char alpha, XLGraphicHint* lpHint )
 {
 	assert(lpSrcClipRect);
+    
+    //当对象长宽为0时，不做任何渲染
+    if (m_objWidth == 0 || m_objHeight == 0)
+    {
+        return;
+    }
 
     if (m_isDirty)
     {
@@ -104,6 +110,7 @@ void SVGObject::OnPaintEx( XL_BITMAP_HANDLE hBitmapDest, const RECT* lpDestClipR
             return;
         }
 
+        //因为是矢量图形，图片的宽高就被认为是对象的宽高，所以无论如何都会绘制整张图片
         m_imageCache = pSVGDoc->Render(m_objWidth, m_objHeight
             , NULL, m_preserveAspectRatio, m_enableSVGAlpha);
         m_isDirty = false;
