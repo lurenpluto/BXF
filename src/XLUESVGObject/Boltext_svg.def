@@ -1,0 +1,9 @@
+LIBRARY	"Boltext_svg"
+
+EXPORTS
+
+	XLUE_InitExtModule
+	XLUE_UninitExtModule
+	
+	XLUE_RegisterObj
+	XLUE_RegisterRes

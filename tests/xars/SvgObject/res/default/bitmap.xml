@@ -1,0 +1,10 @@
+<XLUE>
+<resource>
+	 <bitmap id="bkg"  image="bitmap\bkg.png" />
+	 
+	 <svg id="test" file="bitmap\test.svg"/>
+	 <svg id="gradients" file="bitmap\gradients.svg"/>
+	 <svg id="tiger" file="bitmap\tiger.svg"/>
+	  
+</resource>
+</XLUE>
