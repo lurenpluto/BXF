@@ -127,4 +127,9 @@ call .\copy_extconfig.bat
 
 
 
+:´´½¨3rdÄ¿Â¼
+mkdir ..\3rd
+mkdir ..\3rd\inc
+mkdir ..\3rd\lib
+
 pause
