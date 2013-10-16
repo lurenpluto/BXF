@@ -11,31 +11,25 @@
 * =                                                                 =
 * =-----------------------------------------------------------------=
 * 
-*   FileName    :   DirtyRectObjectCreator
+*   FileName    :   NotifyIconObjectRegister
 *   Author      :   李亚星
-*   Create      :   2013-9-27 
-*   LastChange  :   2013-9-27
+*   Create      :   2013-10-14 
+*   LastChange  :   2013-10-14
 *   History     :	
 *
-*   Description :   DirtyRectObject的创建器
+*   Description :   NotifyIconObject的注册器
 *
 ********************************************************************/ 
-#ifndef __DIRTYRECTOBJECTCREATOR_H__
-#define __DIRTYRECTOBJECTCREATOR_H__
+#ifndef __NOTIFYICONOBJECTREGISTER_H__
+#define __NOTIFYICONOBJECTREGISTER_H__
 
-#include "./DirtyRectObject.h"
+#include "./NotifyIconObject.h"
 
-class DirtyRectObjectCreator
-	: public ExtObjCreatorImpl<DirtyRectObject>
+class NotifyIconObjectRegister
 {
 public:
-	DirtyRectObjectCreator(void);
-	virtual ~DirtyRectObjectCreator(void);
-
-private:
-
-	virtual DirtyRectObject* CreateObj(const char* lpObjClass, XLUE_LAYOUTOBJ_HANDLE hObj);
-	virtual void DestroyObj(DirtyRectObject* lpObj);
+	
+	static bool RegisterNotifyIconObject();
 };
 
-#endif // __DIRTYRECTOBJECTCREATOR_H__
+#endif // __NOTIFYICONOBJECTREGISTER_H__

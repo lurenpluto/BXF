@@ -15,6 +15,7 @@
 #include "./HostWndIconObject/HostWndIconObjectRegister.h"
 #include "./RotateObject/RotateObjectRegister.h"
 #include "./DirtyRectObject/DirtyRectObjectRegister.h"
+#include "./NotifyIconObject/NotifyIconObjectRegister.h"
 
 BOOL APIENTRY DllMain( HANDLE /*hModule*/, 
                        DWORD  /*ul_reason_for_call*/, 
@@ -73,6 +74,10 @@ BOOL XLUE_STDCALL XLUE_RegisterObj( const char* lpCategory, const char* lpObjCla
 	else if (strcmp(lpObjClass, EXTCLASSNAME_DIRTYRECTOBJECT) == 0)
 	{
 		ret = DirtyRectObjectRegister::RegisterDirtyRectObject();
+	}
+	else if (strcmp(lpObjClass, EXTCLASSNAME_NOTIFYICONOBJECT) == 0)
+	{
+		ret = NotifyIconObjectRegister::RegisterNotifyIconObject();
 	}
 	else
 	{

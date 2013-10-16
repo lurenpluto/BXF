@@ -11,31 +11,31 @@
 * =                                                                 =
 * =-----------------------------------------------------------------=
 * 
-*   FileName    :   DirtyRectObjectCreator
+*   FileName    :   NotifyIconObjectParser
 *   Author      :   李亚星
-*   Create      :   2013-9-27 
-*   LastChange  :   2013-9-27
+*   Create      :   2013-10-14 
+*   LastChange  :   2013-10-14
 *   History     :	
 *
-*   Description :   DirtyRectObject的创建器
+*   Description :   NotifyIconObject的xml解析器
 *
 ********************************************************************/ 
-#ifndef __DIRTYRECTOBJECTCREATOR_H__
-#define __DIRTYRECTOBJECTCREATOR_H__
+#ifndef __NOTIFYICONOBJECTPARSER_H__
+#define __NOTIFYICONOBJECTPARSER_H__
 
-#include "./DirtyRectObject.h"
+#include "./NotifyIconObject.h"
 
-class DirtyRectObjectCreator
-	: public ExtObjCreatorImpl<DirtyRectObject>
+class NotifyIconObjectParser
+	: public ExtObjParserImpl<NotifyIconObject>
 {
 public:
-	DirtyRectObjectCreator(void);
-	virtual ~DirtyRectObjectCreator(void);
+	NotifyIconObjectParser(void);
+	virtual ~NotifyIconObjectParser(void);
 
 private:
 
-	virtual DirtyRectObject* CreateObj(const char* lpObjClass, XLUE_LAYOUTOBJ_HANDLE hObj);
-	virtual void DestroyObj(DirtyRectObject* lpObj);
+	// ExtObjParserImpl
+	virtual bool ParserAttribute(NotifyIconObject* lpObj, const char* key, const char* value);
 };
 
-#endif // __DIRTYRECTOBJECTCREATOR_H__
+#endif // __NOTIFYICONOBJECTPARSER_H__
