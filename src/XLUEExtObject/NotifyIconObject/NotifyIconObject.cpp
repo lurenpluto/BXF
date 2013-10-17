@@ -154,7 +154,7 @@ bool NotifyIconObject::AddIcon()
 	BOOL ret = ::Shell_NotifyIcon(NIM_ADD, &notifyData);
 	assert(ret);
 
-	notifyData.uVersion = 4; // NOTIFYICON_VERSION_4
+	notifyData.uVersion = 3; // NOTIFYICON_VERSION
 	ret = ::Shell_NotifyIcon(NIM_SETVERSION, &notifyData);
 	assert(ret);
 
