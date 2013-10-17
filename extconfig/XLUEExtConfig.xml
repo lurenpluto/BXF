@@ -6,6 +6,7 @@
 		<obj class="HostWndIconObject" module="./XLUEExtObject.dll" func="XLUE_RegisterObj"/>
 		<obj class="RotateObject" module="./XLUEExtObject.dll" func="XLUE_RegisterObj"/>
 		<obj class="DirtyRectObject" module="./XLUEExtObject.dll" func="XLUE_RegisterObj"/>
+		<obj class="NotifyIconObject" module="./XLUEExtObject.dll" func="XLUE_RegisterObj"/>
 		<obj class="SVGObject" module="./XLUESVGObject.dll" func="XLUE_RegisterObj"/>
 		
 		<obj class="BoltBrowserObject" module="./XLUEWebKernel.dll" func="XLUE_RegisterObj"/>

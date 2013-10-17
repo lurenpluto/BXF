@@ -1,0 +1,8 @@
+<XLUE>
+<resource>
+
+	 <icon id="systray.big"  width="32" height="32" file="bitmap\thunder.ico" />
+	 <icon id="systray.small"  width="16" height="16" file="bitmap\thunder.ico" />
+	  
+</resource>
+</XLUE>

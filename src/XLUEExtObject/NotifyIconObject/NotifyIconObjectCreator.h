@@ -11,31 +11,32 @@
 * =                                                                 =
 * =-----------------------------------------------------------------=
 * 
-*   FileName    :   DirtyRectObjectCreator
+*   FileName    :   NotifyIconObjectCreator
 *   Author      :   李亚星
-*   Create      :   2013-9-27 
-*   LastChange  :   2013-9-27
+*   Create      :   2013-10-14 
+*   LastChange  :   2013-10-14
 *   History     :	
 *
-*   Description :   DirtyRectObject的创建器
+*   Description :   NotifyIconObject的创建器
 *
 ********************************************************************/ 
-#ifndef __DIRTYRECTOBJECTCREATOR_H__
-#define __DIRTYRECTOBJECTCREATOR_H__
+#ifndef __NOTIFYICONOBJECTCREATOR_H__
+#define __NOTIFYICONOBJECTCREATOR_H__
 
-#include "./DirtyRectObject.h"
+#include "./NotifyIconObject.h"
 
-class DirtyRectObjectCreator
-	: public ExtObjCreatorImpl<DirtyRectObject>
+class NotifyIconObjectCreator
+	: public ExtObjCreatorImpl<NotifyIconObject>
 {
 public:
-	DirtyRectObjectCreator(void);
-	virtual ~DirtyRectObjectCreator(void);
+	NotifyIconObjectCreator(void);
+	virtual ~NotifyIconObjectCreator(void);
 
 private:
 
-	virtual DirtyRectObject* CreateObj(const char* lpObjClass, XLUE_LAYOUTOBJ_HANDLE hObj);
-	virtual void DestroyObj(DirtyRectObject* lpObj);
+	// ExtObjCreatorImpl
+	virtual NotifyIconObject* CreateObj(const char* lpObjClass, XLUE_LAYOUTOBJ_HANDLE hObj);
+	virtual void DestroyObj(NotifyIconObject* lpObj);
 };
 
-#endif // __DIRTYRECTOBJECTCREATOR_H__
+#endif // __NOTIFYICONOBJECTCREATOR_H__

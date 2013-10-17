@@ -1,0 +1,84 @@
+<!--XML最好存储为UTF-8编码-->
+<xlue>
+
+<objtreetemplate id="NotifyIcon.Tree" class="ObjectTreeTemplate">
+	<attr>
+			<left>0</left>
+			<top>0</top>
+			<width>100</width>
+			<height>100</height>
+	</attr>
+
+										
+	<obj id="notifyicon" class="NotifyIconObject">
+		<attr>
+			<icon>systray.small</icon>
+		</attr>
+		<eventlist>
+			<event name="OnMouseMove">
+				local arg = {...}
+				--XLMessageBox("OnMouseMove")
+			</event>
+			<event name="OnLButtonDbClick">
+				local arg = {...}
+				local self = arg[1]
+				
+				local objtreeManager = XLGetObject("Xunlei.UIEngine.TreeManager")
+				objtreeManager:DestroyTree(self:GetOwner())
+				
+				Quit()
+
+			</event>
+			<event name="OnRButtonDbClick">
+				local arg = {...}
+				local self = arg[1]
+				self:SetIconVisible(not self:GetIconVisible())
+				
+				--XLMessageBox("OnLButtonDown")
+			</event>
+			<event name="OnLButtonUp">
+				local arg = {...}
+				--XLMessageBox("OnLButtonUp")
+			</event>
+			<event name="OnRButtonDown">
+				local arg = {...}
+				local self = arg[1]
+				--XLMessageBox("OnRButtonDown")
+				
+				local resID = self:GetIconResID()
+				local index = 0;
+				local function OnTimer(tm, id)
+					if index % 2 == 0 then
+						self:SetIconResID(nil)
+					else
+						self:SetIconResID(resID)
+					end
+					index = index + 1;
+				end
+								
+				local timerManager = XLGetObject("Xunlei.UIEngine.TimerManager")
+				timerManager:SetTimer( OnTimer, 500)
+			</event>
+			<event name="OnRButtonUp">
+				local arg = {...}
+				--XLMessageBox("OnRButtonUp")
+			</event>
+			
+			<event name="OnContextMenu">
+				local arg = {...}
+				local self = arg[1]
+				self:ShowBalloonTip("hello!!", "bolt", 10000, "info")
+				
+				--XLMessageBox("OnContextMenu")
+			</event>
+			<event name="OnSelect">
+				XLMessageBox("OnSelect")
+			</event>
+			<event name="OnKeySelect">
+				XLMessageBox("OnKeySelect")
+			</event>
+		</eventlist>
+	</obj>
+</objtreetemplate>
+	
+</xlue>

@@ -125,8 +125,14 @@ xcopy /Y /E %local_bin_dir%\Debug %local_bin_dir%\ProductRelease
 
 call .\copy_extconfig.bat
 
-:拉取Svg相关文件
 
+
+:拉取Svg相关文件
 call .\update_svg.bat
+
+:创建3rd目录
+mkdir ..\3rd
+mkdir ..\3rd\inc
+mkdir ..\3rd\lib
 
 pause

@@ -649,6 +649,58 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="NotifyIconObject"
+			>
+			<File
+				RelativePath=".\NotifyIconObject\LuaNotifyIconObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NotifyIconObject\LuaNotifyIconObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NotifyIconObject\NotifyIconObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NotifyIconObject\NotifyIconObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NotifyIconObject\NotifyIconObjectCreator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NotifyIconObject\NotifyIconObjectCreator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NotifyIconObject\NotifyIconObjectEvents.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NotifyIconObject\NotifyIconObjectEvents.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NotifyIconObject\NotifyIconObjectParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NotifyIconObject\NotifyIconObjectParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NotifyIconObject\NotifyIconObjectRegister.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NotifyIconObject\NotifyIconObjectRegister.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
