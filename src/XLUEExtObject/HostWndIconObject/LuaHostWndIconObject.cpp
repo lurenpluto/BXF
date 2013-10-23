@@ -6,7 +6,7 @@
 #include "stdafx.h"
 #include "./LuaHostWndIconObject.h"
 
-XLLRTGlobalAPI LuaHostWndIconObject::s_szLuaMemberFuncs[] = 
+const XLLRTGlobalAPI LuaHostWndIconObject::s_szLuaMemberFuncs[] = 
 {
 	{"SetIconResID", SetIconResID},
 	{"GetIconResID", GetIconResID},

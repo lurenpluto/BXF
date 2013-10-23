@@ -42,7 +42,7 @@ private:
 
 public:
 
-	static XLLRTGlobalAPI s_szLuaMemberFuncs[];
+	static const XLLRTGlobalAPI s_szLuaMemberFuncs[];
 };
 
 #endif // __LUAHOSTWNDICONOBJECT_H__
