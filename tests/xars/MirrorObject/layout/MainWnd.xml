@@ -123,7 +123,6 @@
 	
 <hostwndtemplate id="HelloBolt.Wnd" class="FrameHostWnd">
 		<attr> 
-			<mainwnd>1</mainwnd>
 			<title>Bolt</title>
 			<layered>1</layered>
 			<left>200</left> 
