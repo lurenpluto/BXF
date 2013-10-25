@@ -57,6 +57,9 @@ public:
 
 	virtual void OnBeforePopup(CefRefPtr<CefFrame> frame, const CefString& targetUrl
 		, const CefString& targetFrameName, bool& handled) = 0;
+
+	virtual void OnJavaScriptMessageReceived(const CefString messageName
+		, CefRefPtr<CefListValue> argList,bool& handled) = 0;
 };
 
 class BaseBoltBrowser
@@ -99,6 +102,8 @@ public:
 
 	virtual void OnBeforePopup(CefRefPtr<CefFrame> frame, const CefString& targetUrl
 		, const CefString& targetFrameName, bool& handled);
+
+	virtual void OnJavaScriptMessageReceived(const CefString messageName, CefRefPtr<CefListValue> argList,bool& handled);
 
 public:
 

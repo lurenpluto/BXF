@@ -216,3 +216,9 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 lib
+
+/3rd
+/bin
+/bolt
+/lib
+/pdb

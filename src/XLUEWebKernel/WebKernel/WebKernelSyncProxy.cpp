@@ -96,7 +96,6 @@ bool WebKernelSyncProxy::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser
 	messageMap::iterator cp = m_messageMap.find(msgName.c_str());
 	if (cp == m_messageMap.end())
 	{
-		assert(false);
 		return false;
 	}
 
@@ -113,7 +112,6 @@ bool WebKernelSyncProxy::OnThreadMessagerRecevied( CefRefPtr<CefBrowser> browser
 	messageMap::iterator cp = m_messageMap.find(msgName.c_str());
 	if (cp == m_messageMap.end())
 	{
-		assert(false);
 		return false;
 	}
 

@@ -6,6 +6,7 @@
 #include "stdafx.h"
 #include "./BaseBoltBrowserObjectEvents.h"
 #include "../BrowserObjectLuaHost/LuaFrame.h"
+#include "../BrowserObjectLuaHost/LuaListValue.h"
 
 IMPL_EXT_EVENT(BaseBoltBrowserObjectEvents, OnAfterCreated);
 IMPL_EXT_EVENT(BaseBoltBrowserObjectEvents, OnBeforeClose);
@@ -19,6 +20,8 @@ IMPL_EXT_EVENT(BaseBoltBrowserObjectEvents, OnTooltip);
 IMPL_EXT_EVENT(BaseBoltBrowserObjectEvents, OnBeforeNavigation);
 IMPL_EXT_EVENT(BaseBoltBrowserObjectEvents, OnFocusedNodeChanged);
 
+IMPL_EXT_EVENT(BaseBoltBrowserObjectEvents, OnJavaScriptMessageReceived);
+
 BEGIN_EXT_EVENT_VECTOR(BaseBoltBrowserObjectEvents)
 	EXT_EVENT_ITEM(OnAfterCreated)
 	EXT_EVENT_ITEM(OnBeforeClose)
@@ -31,6 +34,8 @@ BEGIN_EXT_EVENT_VECTOR(BaseBoltBrowserObjectEvents)
 
 	EXT_EVENT_ITEM(OnBeforeNavigation)
 	EXT_EVENT_ITEM(OnFocusedNodeChanged)
+
+	EXT_EVENT_ITEM(OnJavaScriptMessageReceived)
 END_EXT_EVENT_VECTOR()
 
 BaseBoltBrowserObjectEvents::BaseBoltBrowserObjectEvents(XLUE_LAYOUTOBJ_HANDLE hObj)
@@ -206,6 +211,21 @@ void BaseBoltBrowserObjectEvents::OnFocusedNodeChanged( CefRefPtr<CefFrame> fram
 
 	BOOL isHandled = FALSE;
 	long ret = XLUE_FireExtObjEvent(m_obj, s_OnFocusedNodeChanged, luaState, 2, 0, &isHandled);
+
+	handled = !!isHandled;
+}
+
+void BaseBoltBrowserObjectEvents::OnJavaScriptMessageReceived(const CefString messageName, CefRefPtr<CefListValue> argList,bool& handled)
+{
+	LuaStackKeeper luaState(m_luaState);
+	
+	XLUE_PushObject(luaState,m_obj);
+
+	WebKernelLuaHelper::PushString(luaState,messageName);
+	LuaListValue::PushListValue(luaState,argList);
+
+	BOOL isHandled = FALSE;
+	long ret = XLUE_FireExtObjEvent(m_obj,s_OnJavaScriptMessageReceived,luaState,3,0,&isHandled);
 
 	handled = !!isHandled;
 }

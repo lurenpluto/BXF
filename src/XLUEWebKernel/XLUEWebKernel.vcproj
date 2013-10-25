@@ -3430,11 +3430,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\WebKernel\DBG.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\WebKernel\DBG.h"
+				>
+			</File>
+			<File
 				RelativePath=".\WebKernel\InputHandler.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\WebKernel\InputHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WebKernel\ListUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\WebKernel\ListUtil.h"
 				>
 			</File>
 			<File
@@ -3523,6 +3539,14 @@
 			</File>
 			<File
 				RelativePath=".\WebKernel\WebKernelSyncProxy.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WebKernel\WebKernelV8Handler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\WebKernel\WebKernelV8Handler.h"
 				>
 			</File>
 			<File
@@ -3643,6 +3667,14 @@
 			</File>
 			<File
 				RelativePath=".\BrowserObjectLuaHost\LuaFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BrowserObjectLuaHost\LuaListValue.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\BrowserObjectLuaHost\LuaListValue.h"
 				>
 			</File>
 			<File

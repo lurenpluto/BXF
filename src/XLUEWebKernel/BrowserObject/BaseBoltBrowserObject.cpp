@@ -302,3 +302,10 @@ void BaseBoltBrowserObject::OnBeforePopup( CefRefPtr<CefFrame> frame, const CefS
 
 	m_lpBaseBrowserObjectEvents->OnBeforePopup(frame, targetUrl, targetFrameName, handled);
 }
+
+void BaseBoltBrowserObject::OnJavaScriptMessageReceived(const CefString messageName, CefRefPtr<CefListValue> argList,bool& handled)
+{
+	assert(m_lpBaseBrowserObjectEvents);
+
+	m_lpBaseBrowserObjectEvents->OnJavaScriptMessageReceived(messageName,argList, handled);
+}

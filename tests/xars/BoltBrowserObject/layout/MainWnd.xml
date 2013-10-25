@@ -24,17 +24,18 @@
 			</obj>
 			
 
-			<obj class="BoltBrowserObject">
+			<obj id="browser" class="BoltBrowserObject">
 				<attr>
 					<width>father.width</width>
 					<height>father.height / 2</height>
 					<popupinplace>0</popupinplace>
-					<url>www.baidu.com</url>
+					<url>file://d:/dev/code_git/BXF/tests/xars/BoltBrowserObject/html/binding.html</url>
 				</attr>
 				<eventlist>
 					<event name="OnLoadingStateChange" file="MainWnd.xml.lua" func="OnLoadingStateChange"/>
 					<event name="OnBeforeNavigation" file="MainWnd.xml.lua" func="OnBeforeNavigation"/>
 					<event name="OnBeforePopup" file="MainWnd.xml.lua" func="OnBeforePopup"/>
+					<event name="OnJavaScriptMessageReceived" file="MainWnd.xml.lua" func="OnJavaScriptMessageReceived"/>
 				</eventlist>
 			</obj>
 			
@@ -77,6 +78,7 @@
 		<eventlist>
 			<event name="OnSize" file="MainWnd.xml.lua" func="OnSize"/>
 			<event name="OnClose" file="MainWnd.xml.lua" func="OnClose"/>
+			<event name="OnCreate" file="MainWnd.xml.lua" func="OnCreate"/>
 		</eventlist>
 </hostwndtemplate>
 </xlue>

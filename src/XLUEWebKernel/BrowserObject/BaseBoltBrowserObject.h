@@ -79,6 +79,9 @@ protected:
 	virtual void OnBeforePopup(CefRefPtr<CefFrame> frame, const CefString& targetUrl
 		, const CefString& targetFrameName, bool& handled);
 
+	virtual void OnJavaScriptMessageReceived(const CefString messageName
+		, CefRefPtr<CefListValue> argList,bool& handled);
+
 protected:
 
 	void Init(XLUE_LAYOUTOBJ_HANDLE hOwnerObj, BaseBoltBrowser* lpBaseBrowser, BaseBoltBrowserObjectEvents* lpEvents);

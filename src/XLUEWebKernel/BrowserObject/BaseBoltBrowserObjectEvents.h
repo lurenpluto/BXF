@@ -54,6 +54,8 @@ public:
 
 	void OnFocusedNodeChanged(CefRefPtr<CefFrame> frame, bool& handled);
 
+	void OnJavaScriptMessageReceived(const CefString messageName, CefRefPtr<CefListValue> argList,bool& handled);
+
 protected:
 
 	DECLEAR_EXT_EVENT_VECTOR();
@@ -70,6 +72,8 @@ protected:
 
 	DECLEAR_EXT_EVENT(OnBeforeNavigation);
 	DECLEAR_EXT_EVENT(OnFocusedNodeChanged);
+
+	DECLEAR_EXT_EVENT(OnJavaScriptMessageReceived);
 
 protected:
 

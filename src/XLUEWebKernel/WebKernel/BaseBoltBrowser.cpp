@@ -466,3 +466,9 @@ void BaseBoltBrowser::OnFocusedNodeChanged( CefRefPtr<CefFrame> frame, bool& han
 
 	m_lpEvents->OnFocusedNodeChanged(frame, handled);
 }
+
+void BaseBoltBrowser::OnJavaScriptMessageReceived(const CefString messageName, CefRefPtr<CefListValue> argList,bool& handled)
+{
+	assert(m_lpEvents);
+	m_lpEvents->OnJavaScriptMessageReceived(messageName,argList,handled);
+}
