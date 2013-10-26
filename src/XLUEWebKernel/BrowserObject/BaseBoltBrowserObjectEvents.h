@@ -54,7 +54,7 @@ public:
 
 	void OnFocusedNodeChanged(CefRefPtr<CefFrame> frame, bool& handled);
 
-	void OnJavaScriptMessageReceived(const CefString messageName, CefRefPtr<CefListValue> argList,bool& handled);
+	void OnJavaScriptMessageReceived(const CefString messageName, CefRefPtr<CefDictionaryValue> dictionaryValue, bool& handled);
 
 protected:
 

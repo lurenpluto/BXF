@@ -35,7 +35,7 @@ end
 
 function OnJavaScriptMessageReceived(self,messageName,args)
 	XLMessageBox(messageName)
-	XLMessageBox(args[1])
+	XLMessageBox(args['city']['date'])
 end
 
 function GetFileAbsPath(relativePath)

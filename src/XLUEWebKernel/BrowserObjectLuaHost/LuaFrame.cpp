@@ -200,7 +200,7 @@ int LuaFrame::GetName( lua_State* luaState )
 	if (spFrame != NULL)
 	{
 		CefString name = spFrame->GetName();
-		WebKernelLuaHelper::PushString(luaState, name);
+		WebKernelLuaHelper::PushCefString(luaState, name);
 
 		return 1;
 	}
@@ -230,7 +230,7 @@ int LuaFrame::GetURL( lua_State* luaState )
 	if (spFrame != NULL)
 	{
 		CefString name = spFrame->GetURL();
-		WebKernelLuaHelper::PushString(luaState, name);
+		WebKernelLuaHelper::PushCefString(luaState, name);
 
 		return 1;
 	}

@@ -6,7 +6,7 @@
 #include "stdafx.h"
 #include "./BaseBoltBrowserObjectEvents.h"
 #include "../BrowserObjectLuaHost/LuaFrame.h"
-#include "../BrowserObjectLuaHost/LuaListValue.h"
+#include "../BrowserObjectLuaHost/WebKernelLuaHelper.h"
 
 IMPL_EXT_EVENT(BaseBoltBrowserObjectEvents, OnAfterCreated);
 IMPL_EXT_EVENT(BaseBoltBrowserObjectEvents, OnBeforeClose);
@@ -128,8 +128,8 @@ void BaseBoltBrowserObjectEvents::OnBeforePopup( CefRefPtr<CefFrame> frame, cons
 
 	LuaFrame::PushFrame(luaState, frame);
 
-	WebKernelLuaHelper::PushString(luaState, target_url);
-	WebKernelLuaHelper::PushString(luaState, target_frame_name);
+	WebKernelLuaHelper::PushCefString(luaState, target_url);
+	WebKernelLuaHelper::PushCefString(luaState, target_frame_name);
 
 	BOOL isHandled = FALSE;
 	XLUE_FireExtObjEvent(m_obj, s_OnBeforePopup, luaState, 4, 0, &isHandled);
@@ -144,7 +144,7 @@ void BaseBoltBrowserObjectEvents::OnAddressChange( CefRefPtr<CefFrame> frame, co
 	XLUE_PushObject(luaState, m_obj);
 
 	LuaFrame::PushFrame(luaState, frame);
-	WebKernelLuaHelper::PushString(luaState, url);
+	WebKernelLuaHelper::PushCefString(luaState, url);
 
 	BOOL isHandled = FALSE;
 	XLUE_FireExtObjEvent(m_obj, s_OnAddressChange, luaState, 3, 0, &isHandled);
@@ -158,7 +158,7 @@ void BaseBoltBrowserObjectEvents::OnTitleChange( const CefString& title, bool& h
 
 	XLUE_PushObject(luaState, m_obj);
 
-	WebKernelLuaHelper::PushString(luaState, title);
+	WebKernelLuaHelper::PushCefString(luaState, title);
 
 	BOOL isHandled = FALSE;
 	XLUE_FireExtObjEvent(m_obj, s_OnTitleChange, luaState, 2, 0, &isHandled);
@@ -172,7 +172,7 @@ void BaseBoltBrowserObjectEvents::OnTooltip( CefString& text, bool& handled )
 
 	XLUE_PushObject(luaState, m_obj);
 
-	WebKernelLuaHelper::PushString(luaState, text);
+	WebKernelLuaHelper::PushCefString(luaState, text);
 
 	BOOL isHandled = FALSE;
 	XLUE_FireExtObjEvent(m_obj, s_OnTooltip, luaState, 2, 0, &isHandled);
@@ -189,7 +189,7 @@ void BaseBoltBrowserObjectEvents::OnBeforeNavigation( CefRefPtr<CefFrame> frame,
 	XLUE_PushObject(luaState, m_obj);
 
 	LuaFrame::PushFrame(luaState, frame);
-	WebKernelLuaHelper::PushString(luaState, url);
+	WebKernelLuaHelper::PushCefString(luaState, url);
 	lua_pushinteger(luaState, navigation_type);
 	lua_pushboolean(luaState, is_redirect);
 
@@ -206,7 +206,6 @@ void BaseBoltBrowserObjectEvents::OnFocusedNodeChanged( CefRefPtr<CefFrame> fram
 	LuaStackKeeper luaState(m_luaState);
 
 	XLUE_PushObject(luaState, m_obj);
-
 	LuaFrame::PushFrame(luaState, frame);
 
 	BOOL isHandled = FALSE;
@@ -215,14 +214,13 @@ void BaseBoltBrowserObjectEvents::OnFocusedNodeChanged( CefRefPtr<CefFrame> fram
 	handled = !!isHandled;
 }
 
-void BaseBoltBrowserObjectEvents::OnJavaScriptMessageReceived(const CefString messageName, CefRefPtr<CefListValue> argList,bool& handled)
+void BaseBoltBrowserObjectEvents::OnJavaScriptMessageReceived(const CefString messageName, CefRefPtr<CefDictionaryValue> dictionaryValue,bool& handled)
 {
 	LuaStackKeeper luaState(m_luaState);
 	
-	XLUE_PushObject(luaState,m_obj);
-
-	WebKernelLuaHelper::PushString(luaState,messageName);
-	LuaListValue::PushListValue(luaState,argList);
+	XLUE_PushObject(luaState,m_obj);                                       // 传入浏览器对象
+	WebKernelLuaHelper::PushCefString(luaState,messageName);               // 传入Javascript消息名字
+	WebKernelLuaHelper::PushCefDictionaryValue(luaState,dictionaryValue);  // 传入Javascript消息字典
 
 	BOOL isHandled = FALSE;
 	long ret = XLUE_FireExtObjEvent(m_obj,s_OnJavaScriptMessageReceived,luaState,3,0,&isHandled);

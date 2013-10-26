@@ -11,23 +11,34 @@
 * =                                                                 =
 * =-----------------------------------------------------------------=
 * 
-*   FileName    :   LuaListValue
+*   FileName    :   ListUtil.h
 *   Author      :   范飞龙
 *   Create      :   2013-10-25
 *   LastChange  :   2013-10-25
 *   History     :	
 *
-*   Description :   CefListValue的lua封装
+*   Description :   CefV8Value和CefListValue、CefDictionaryValue相互转化辅助类
 *
 ********************************************************************/ 
-#ifndef __LUALISTVALUE_H__
-#define __LUALISTVALUE_H__
-
-class LuaListValue
+#ifndef __WEBKERNELCONVERTOR_H__
+#define __WEBKERNELCONVERTOR_H__
+	
+class WebKernelConvertor
 {
 public:
-	static void PushListValue(lua_State* luaState, CefListValue* lpListValue);
-	static CefListValue* CheckListValue(lua_State* luaState, int index);
+	// Transfer a V8 value to a List value.
+	static void CefV8Array2ListValue(CefRefPtr<CefV8Value> source, CefRefPtr<CefListValue> target);
+
+	// Transfer a List value to a V8 value.
+	static void CefListValue2V8Array(CefRefPtr<CefListValue> source, CefRefPtr<CefV8Value> target);
+
+	// Transfer a V8 Json Object 2 a Dictionary value.
+	static void CefV8JsonObject2DictionaryValue(CefRefPtr<CefV8Value>source,CefRefPtr<CefDictionaryValue> target);
+
+	// Transfer a Dictionary 2 a V8 Json Object value.
+	static void CefDictionaryValue2V8JsonObject(CefRefPtr<CefDictionaryValue> source,CefRefPtr<CefV8Value> target);
 };
 
-#endif //__LUALISTVALUE_H__
+
+#endif //__WEBKERNERLCONVERTOR_H__
+

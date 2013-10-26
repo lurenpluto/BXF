@@ -3446,14 +3446,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\WebKernel\ListUtil.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\WebKernel\ListUtil.h"
-				>
-			</File>
-			<File
 				RelativePath=".\WebKernel\WebKernelApp.cpp"
 				>
 			</File>
@@ -3475,6 +3467,14 @@
 			</File>
 			<File
 				RelativePath=".\WebKernel\WebKernelClient.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WebKernel\WebKernelConvertor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\WebKernel\WebKernelConvertor.h"
 				>
 			</File>
 			<File
@@ -3670,19 +3670,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BrowserObjectLuaHost\LuaListValue.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\BrowserObjectLuaHost\LuaListValue.h"
-				>
-			</File>
-			<File
 				RelativePath=".\BrowserObjectLuaHost\LuaWindowlessBoltBrowserObject.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\BrowserObjectLuaHost\LuaWindowlessBoltBrowserObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BrowserObjectLuaHost\WebKernelLuaHelper.cpp"
 				>
 			</File>
 			<File

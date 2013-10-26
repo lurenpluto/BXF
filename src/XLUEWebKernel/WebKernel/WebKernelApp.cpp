@@ -7,7 +7,7 @@
 #include "./WebKernelApp.h"
 #include "./DBG.h"
 #include "./WebKernelV8Handler.h"
-#include "./ListUtil.h"
+#include "./WebKernelConvertor.h"
 
 WebKernelApp::WebKernelApp(void)
 :m_spBrowserProcessHandler(NULL),
@@ -196,12 +196,15 @@ bool WebKernelRenderProcessHandler::OnProcessMessageReceived( CefRefPtr<CefBrows
 
 	bool handled = false;
 	// Execute the registered JavaScript callback if any.
-	if (!callback_map_.empty()) {
+	if (!callback_map_.empty()) 
+	{
 		CefString message_name = message->GetName();
 		CallbackMap::const_iterator it = callback_map_.find(
 			std::make_pair(message_name.ToString(),
 			browser->GetIdentifier()));
-		if (it != callback_map_.end()) {
+
+		if (it != callback_map_.end()) 
+		{
 			// Keep a local reference to the objects. The callback may remove itself
 			// from the callback map.
 			CefRefPtr<CefV8Context> context = it->second.first;
@@ -217,9 +220,8 @@ bool WebKernelRenderProcessHandler::OnProcessMessageReceived( CefRefPtr<CefBrows
 
 			// Second argument is the list of message arguments.
 			CefRefPtr<CefListValue> list = message->GetArgumentList();
-			CefRefPtr<CefV8Value> args =
-				CefV8Value::CreateArray(static_cast<int>(list->GetSize()));
-			SetList(list, args);
+			CefRefPtr<CefV8Value> args = CefV8Value::CreateArray(static_cast<int>(list->GetSize()));
+			WebKernelConvertor::CefListValue2V8Array(list, args);
 			arguments.push_back(args);
 
 			// Execute the callback.

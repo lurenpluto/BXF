@@ -77,12 +77,13 @@ bool WebKernelClient::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, C
 	CefString name=message->GetName();
 	const wchar_t xlueJsMessageHeader[] = L"xlue.js.message.";
 	int headLength = sizeof(xlueJsMessageHeader)/sizeof(wchar_t)-1;
-	DBG(name);
 	int equal = std::wcsncmp(name.c_str(),xlueJsMessageHeader,headLength-1);
 	if(equal==0)
 	{
+		DBG(name);
 		CefString jsMessageName = name.ToString().substr(headLength);
 		CefRefPtr<CefListValue> argList = message->GetArgumentList();
+		CefRefPtr<CefDictionaryValue> dictionaryValue = argList->GetDictionary(0);
 		DBG(jsMessageName);
 
 		//标记Lua环境是否有响应了该消息，用于返回给render进程的js环境
@@ -90,7 +91,7 @@ bool WebKernelClient::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, C
 
 		//TODO:调用Lua注册的响应函数
 		BaseBoltBrowser* lpBoltBrowser = g_webKernelGlobal.m_browserManager.GetBoltBrowserFromID(browser->GetIdentifier());
-		lpBoltBrowser->OnJavaScriptMessageReceived(jsMessageName,argList,handled);
+		lpBoltBrowser->OnJavaScriptMessageReceived(jsMessageName,dictionaryValue,handled);
 
 		CefRefPtr<CefProcessMessage> resultMessage = CefProcessMessage::Create(name);
 		CefRefPtr<CefListValue> resultArgList = resultMessage->GetArgumentList();

@@ -1,9 +1,4 @@
 /********************************************************************
-/* Copyright (c) 2013 The BOLT UIEngine. All rights reserved.
-/* Use of this source code is governed by a BOLT license that can be
-/* found in the LICENSE file.
-********************************************************************/ 
-/********************************************************************
 *
 * =-----------------------------------------------------------------=
 * =                                                                 =
@@ -26,14 +21,14 @@
 class WebKernelLuaHelper
 {
 public:
+	static void PushCefString(lua_State* luaState, const CefString& value);
+	static CefString ToCefString(lua_State* luaState,int index);
 
-	static void PushString(lua_State* luaState, const CefString& value)
-	{
-		std::string utf8Value;
-		XLUETranscode::Unicode_to_UTF8(value.c_str(), value.size(), utf8Value);
+	static void PushCefListValue(lua_State* luaState, CefRefPtr<CefListValue> lpListValue);
+	static CefRefPtr<CefListValue> ToCefListValue(lua_State* luaState, int index);
 
-		lua_pushstring(luaState, utf8Value.c_str());
-	}
+	static void PushCefDictionaryValue(lua_State* luaState,CefRefPtr<CefDictionaryValue> lpDictionaryValue);
+	static CefRefPtr<CefDictionaryValue> ToCefDictionaryValue(lua_State* luaState,int index);
 };
 
 #endif // __WEBKERNELLUAHELPER_H__

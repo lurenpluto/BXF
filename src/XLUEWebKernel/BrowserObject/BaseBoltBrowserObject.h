@@ -80,7 +80,7 @@ protected:
 		, const CefString& targetFrameName, bool& handled);
 
 	virtual void OnJavaScriptMessageReceived(const CefString messageName
-		, CefRefPtr<CefListValue> argList,bool& handled);
+		, CefRefPtr<CefDictionaryValue> dictionaryValue, bool& handled);
 
 protected:
 

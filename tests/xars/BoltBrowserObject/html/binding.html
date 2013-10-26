@@ -10,7 +10,8 @@
 			// Send a message to the browser process.
 			function sendMessage() {
 			  var msg = document.getElementById("message").value;
-			  app.sendMessage('binding_test', [msg]);
+			  app.sendMessage('binding_test',
+				  JSON.parse('{"city":{"name":"Shenzhen","date":"2013"},"street":"Keji road"}'));
 			}
 		</script>
 
