@@ -40,5 +40,3 @@ set svglib_url=%svg_url%/lib
 set thirdlib_url=https://github.com/lurenpluto/BXF_3RD/trunk/3rd_lib
 
 %svn_tool% export --force -r %svg_ver% %thirdlib_url% %third_lib_dir%
-
-pause

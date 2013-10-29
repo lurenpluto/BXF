@@ -9,6 +9,7 @@ bin/
 bolt/
 tmp/
 pdb/
+3rd/
 *.tmp
 *.bak
 *.swp
