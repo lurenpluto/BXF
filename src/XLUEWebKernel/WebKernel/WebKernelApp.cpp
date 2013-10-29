@@ -123,12 +123,15 @@ void WebKernelRenderProcessHandler::OnWebKitInitialized()
 
 void WebKernelRenderProcessHandler::OnBrowserCreated( CefRefPtr<CefBrowser> browser )
 {
-
+	assert(browser);
+	bool ret = g_webKernelGlobal.m_browserManager.Register(browser.get(), NULL, NULL);
+	assert(ret);
 }
 
 void WebKernelRenderProcessHandler::OnBrowserDestroyed( CefRefPtr<CefBrowser> browser )
 {
-
+	assert(browser);
+	g_webKernelGlobal.m_browserManager.UnRegister(browser.get());
 }
 
 bool WebKernelRenderProcessHandler::OnBeforeNavigation( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, 

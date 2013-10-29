@@ -17,9 +17,7 @@ WebKernelBrowserManager::~WebKernelBrowserManager(void)
 bool WebKernelBrowserManager::Register( CefBrowser* lpBrowser, BaseBoltBrowser* lpBoltBrowser, XLUE_LAYOUTOBJ_HANDLE hOwnerObj )
 {
 	assert(lpBrowser);
-	assert(lpBoltBrowser);
-	assert(hOwnerObj);
-	assert(XLUE_IsObjValid(hOwnerObj));
+	assert(hOwnerObj == NULL || XLUE_IsObjValid(hOwnerObj));
 
 	BrowserItem item;
 	item.m_browserID = lpBrowser->GetIdentifier();

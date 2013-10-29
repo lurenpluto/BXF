@@ -532,7 +532,7 @@ bool NotifyIconObject::ShowBalloonTip( const wchar_t* lpMessage, const wchar_t* 
 
 	notifyData.hWnd = m_lpNotifyWindow->m_hWnd;
 
-	BOOL ret =  ::Shell_NotifyIcon(NIM_MODIFY, &notifyData);
+	BOOL ret = ::Shell_NotifyIcon(NIM_MODIFY, &notifyData);
 	assert(ret);
 
 	return !!ret;
