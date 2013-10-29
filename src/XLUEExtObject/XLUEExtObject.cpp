@@ -16,6 +16,7 @@
 #include "./RotateObject/RotateObjectRegister.h"
 #include "./DirtyRectObject/DirtyRectObjectRegister.h"
 #include "./NotifyIconObject/NotifyIconObjectRegister.h"
+#include "./GaussianBlurObject/GaussianBlurObjectRegister.h"
 
 BOOL APIENTRY DllMain( HANDLE /*hModule*/, 
                        DWORD  /*ul_reason_for_call*/, 
@@ -78,6 +79,10 @@ BOOL XLUE_STDCALL XLUE_RegisterObj( const char* lpCategory, const char* lpObjCla
 	else if (strcmp(lpObjClass, EXTCLASSNAME_NOTIFYICONOBJECT) == 0)
 	{
 		ret = NotifyIconObjectRegister::RegisterNotifyIconObject();
+	}
+	else if (strcmp(lpObjClass, EXTCLASSNAME_GAUSSIANBLUROBJECT) == 0)
+	{
+		ret = GaussianBlurObjectRegister::RegisterGaussianBlurObject();
 	}
 	else
 	{

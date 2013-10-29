@@ -14,6 +14,9 @@
 		/>
 	</Platforms>
 	<ToolFiles>
+		<DefaultToolFile
+			FileName="nasm.rules"
+		/>
 	</ToolFiles>
 	<Configurations>
 		<Configuration
@@ -29,6 +32,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="NASM"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -114,6 +120,9 @@
 				Name="VCCustomBuildTool"
 			/>
 			<Tool
+				Name="NASM"
+			/>
+			<Tool
 				Name="VCXMLDataGeneratorTool"
 			/>
 			<Tool
@@ -194,6 +203,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="NASM"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -698,6 +710,78 @@
 			</File>
 			<File
 				RelativePath=".\NotifyIconObject\NotifyIconObjectRegister.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="GaussianBlurObject"
+			>
+			<File
+				RelativePath=".\GaussianBlurObject\GaussianBlurDelegate.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\GaussianBlurFIRImpl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\GaussianBlurIIRImpl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\GaussianBlurObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\GaussianBlurObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\GaussianBlurObjectCreator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\GaussianBlurObjectCreator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\GaussianBlurObjectParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\GaussianBlurObjectParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\GaussianBlurObjectRegister.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\GaussianBlurObjectRegister.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\HorizontalMMXFIRLine.asm"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\HorizontalSSEIIRLine.asm"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\LuaGaussianBlurObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\LuaGaussianBlurObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\VerticalMMXFIRLine.asm"
+				>
+			</File>
+			<File
+				RelativePath=".\GaussianBlurObject\VerticalSSEIIRLine.asm"
 				>
 			</File>
 		</Filter>
