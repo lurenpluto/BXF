@@ -6,7 +6,7 @@
 #ifndef _GAUSSIANBLURDELEGATE_H_
 #define _GAUSSIANBLURDELEGATE_H_
 
-#define DEBUG
+//#define DEBUG
 
 void DericheIIRRenderSSE(XL_BITMAP_HANDLE hBitmap, const float &sigma);
 void OneDimentionRenderMMX(XL_BITMAP_HANDLE hBitmpa, const float &sigma, int radius);
