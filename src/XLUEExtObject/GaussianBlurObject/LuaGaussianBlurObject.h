@@ -1,3 +1,8 @@
+/********************************************************************
+/* Copyright (c) 2013 The BOLT UIEngine. All rights reserved.
+/* Use of this source code is governed by a BOLT license that can be
+/* found in the LICENSE file.
+********************************************************************/ 
 #ifndef __LUAGAUSSIANBLUROBJECT_H__
 #define __LUAGAUSSIANBLUROBJECT_H__
 
@@ -11,7 +16,7 @@ public:
 	virtual ~LuaGaussianBlurObject(void);
 
 public:
-	static double GetSigmaFromString(const char* lpSigma);
+	static float GetSigmaFromString(const char* lpSigma);
 
 private:
 	static int SetSigma(lua_State* luaState);
@@ -20,8 +25,8 @@ private:
 	static int SetRadius(lua_State *luaState);
 	static int GetRadius(lua_State *luaState);
 
-	static int SetType(lua_State *luaState);
-	static int GetType(lua_State *luaState);
+	static int SetGaussianType(lua_State *luaState);
+	static int GetGaussianType(lua_State *luaState);
 
 public:
 	static const XLLRTGlobalAPI s_szLuaMemberFuncs[];

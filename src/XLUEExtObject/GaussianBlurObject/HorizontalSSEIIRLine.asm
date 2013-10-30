@@ -1,13 +1,18 @@
+; /********************************************************************
+; /* Copyright (c) 2013 The BOLT UIEngine. All rights reserved.
+; /* Use of this source code is governed by a BOLT license that can be
+; /* found in the LICENSE file.
+; ********************************************************************/ 
 ; Stretch SSE main loop implement
 
-;void horizontal_sse_iir_line(float *oTemp,  unsigned long* id, float *od, int width, int height, float *a0, float *a1, float *a2, float *a3 float *b1, float *b2, float *cprev, float *cnext);
+;void Horizontal_sse_iir_line(float *oTemp,  unsigned long* id, float *od, int width, int height, float *a0, float *a1, float *a2, float *a3 float *b1, float *b2, float *cprev, float *cnext);
 			
 BITS 32
 
 SECTION .text			
-global _horizontal_sse_iir_line
+global _Horizontal_sse_iir_line
 
-_horizontal_sse_iir_line:
+_Horizontal_sse_iir_line:
 	push ebp
 	mov ebp, esp
 	sub esp, 0x10;  

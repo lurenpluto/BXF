@@ -1,30 +1,28 @@
+/********************************************************************
+/* Copyright (c) 2013 The BOLT UIEngine. All rights reserved.
+/* Use of this source code is governed by a BOLT license that can be
+/* found in the LICENSE file.
+********************************************************************/ 
 #include "stdafx.h"
-#include "GaussianBlurDelegate.h"
+#include "./GaussianBlurDelegate.h"
 #include <cmath>
 #include <omp.h>
 
-#include <time.h>
+const float pi = 3.14159265358979323846;
 
-void GaussianFunction(double sigma, int r, float ** results);
-void GaussianFunction2(double sigma, int r, double **results);
-const double pi = 3.14159265358979323846;
-
-void GaussianFunctionInteger(double i_sigma, int & io_radius, __int16 ** o_results, int shift)
+void GaussianFunctionInteger(float i_sigma, int & io_radius, short ** o_results, int shift)
 {
-	clock_t time1 = clock();
-	float *fWeights;
-
-	fWeights =new float[io_radius*2+1];
+	float *fWeights = new float[io_radius * 2 + 1];
 	float fSum = 0;
 	// float fFactor = 1.0/i_sigma/sqrt(2*pi); // later we'll scale the weights to sum in 2^shift, so fFactor is not necessary to sum up to 1
-	for ( int i=0; i < io_radius+1; i++)
+	for ( int i = 0; i < io_radius + 1; i++)
 	{
-		(fWeights)[i] = exp(0- (i-io_radius)*(i-io_radius)/(2*i_sigma*i_sigma));
+		(fWeights)[i] = exp(0 - (i - io_radius) *(i - io_radius)/(2 * i_sigma * i_sigma));
 		fSum += (fWeights)[i];
 	}
-	for (int i = io_radius+1; i < io_radius*2+1; i++)
+	for (int i = io_radius + 1; i < io_radius * 2 + 1; i++)
 	{
-		(fWeights)[i] = (fWeights)[io_radius*2-i];
+		(fWeights)[i] = (fWeights)[io_radius * 2 - i];
 		fSum += (fWeights)[i];
 	} // normal distribution weights
 
@@ -34,18 +32,16 @@ void GaussianFunctionInteger(double i_sigma, int & io_radius, __int16 ** o_resul
 		expectedSum *= 2;
 		shift -= 1;
 	}
-	float tmpFactor = (float)expectedSum/fSum;
-	int diameter = 2*io_radius + 1;
+	float tmpFactor = (float)expectedSum / fSum;
+	int diameter = 2 * io_radius + 1;
 
-	*o_results = new __int16[diameter];
-	__int16 watch[9999];
+	*o_results = new short[diameter];
 	int sum = 0;
 	int firstNonZero = -1;
 	for (int i = 0; i < diameter; i++)
 	{
-		(*o_results)[i] = (__int16)(fWeights[i]*tmpFactor + 0.5);
+		(*o_results)[i] = (short)(fWeights[i] * tmpFactor + 0.5);
 		sum += (*o_results)[i];
-		watch[i] = (*o_results)[i];
 		if ((*o_results)[i] > 0 && firstNonZero == -1)
 		{
 			firstNonZero = i;
@@ -55,9 +51,7 @@ void GaussianFunctionInteger(double i_sigma, int & io_radius, __int16 ** o_resul
 	while(firstNonZero >= 1 && sum < expectedSum)
 	{
 		(*o_results)[firstNonZero - 1]++;
-		watch[firstNonZero-1] = (*o_results)[firstNonZero - 1];
 		(*o_results)[diameter-firstNonZero]++;
-		watch[diameter-firstNonZero] = (*o_results)[diameter-firstNonZero];
 		sum += 2;
 		firstNonZero--;
 	}
@@ -69,42 +63,36 @@ void GaussianFunctionInteger(double i_sigma, int & io_radius, __int16 ** o_resul
 		for ( int i = -diffRadius; i <= diffRadius; i++)
 		{
 			(*o_results)[io_radius + i]--;
-			watch[io_radius + i] = (*o_results)[io_radius + i];
 			sum--;
 		}
 		if (diff %2 == 0)
 		{
 			(*o_results)[io_radius]++;
 			sum++;
-			watch[io_radius ] = (*o_results)[io_radius];
 		}
 	}
 
-	if (sum <expectedSum)
+	if (sum < expectedSum)
 	{
 		int diff = expectedSum - sum;
 		int diffRadius = diff / 2;
 		for ( int i = -diffRadius; i <= diffRadius; i++)
 		{
 			(*o_results)[io_radius + i]++;
-			watch[io_radius + i] = (*o_results)[io_radius + i];
 		}
 		if (diff%2 == 0)
 		{
 			(*o_results)[io_radius]--;
-			watch[io_radius] = (*o_results)[io_radius];
 		}
 	}
 	io_radius = io_radius - firstNonZero;
 	delete []fWeights;
-	clock_t time2=clock();
-	float diff = (((float)time2 - (float)time1) / 1000000.0F ) * 1000; 
 }
 
-extern "C" void horizontal_mmx_fir_line(__int32 radius, __int32 width, __int32 height, __int16 *weightInt, unsigned long *lpPixelBufferTemp, unsigned long *lpPixelBufferLine);
-extern "C" void vertical_mmx_fir_line(__int32 radius, __int32 width, __int32 height, __int16 *weightInt, unsigned long *lpPixelBufferDest, unsigned long *lpPixelBufferLine);
+extern "C" void Horizontal_mmx_fir_line(int radius, int width, int height, short *weightInt, unsigned long *lpPixelBufferTemp, unsigned long *lpPixelBufferLine);
+extern "C" void Vertical_mmx_fir_line(int radius, int width, int height, short *weightInt, unsigned long *lpPixelBufferDest, unsigned long *lpPixelBufferLine);
 // 这个方法的C++版本请看OneDimentionRender
-void OneDimentionRenderMMX(XL_BITMAP_HANDLE hBitmap, double i_sigma, __int32 i_radius)
+void OneDimentionRenderMMX(XL_BITMAP_HANDLE hBitmap, const float &i_sigma, int i_radius)
 {
 	assert(hBitmap);
 	XLBitmapInfo bmp;
@@ -112,14 +100,15 @@ void OneDimentionRenderMMX(XL_BITMAP_HANDLE hBitmap, double i_sigma, __int32 i_r
 
 	assert(bmp.ColorType == XLGRAPHIC_CT_ARGB32);
 
-	__int16 *weightBufferInitial;
-	__int16 *weightInt, *weights;
+	short *weightBufferInitial = NULL;
+	short *weightInt = NULL;
+	short *weights = NULL;
 	if (i_radius > 128)
 	{
 		i_radius = 128;
 	}
 	// TODO: 这里改一改, 太难看了. 
-	__int32 radius = i_radius;
+	int radius = i_radius;
 	GaussianFunctionInteger(i_sigma, radius, &weightBufferInitial, 8);
 	if (radius == 0)
 	{
@@ -128,10 +117,10 @@ void OneDimentionRenderMMX(XL_BITMAP_HANDLE hBitmap, double i_sigma, __int32 i_r
 	weightInt = weightBufferInitial + i_radius - radius;
 	weights = weightInt;
 
-	unsigned long *lpPixelBufferLine;
+	unsigned long *lpPixelBufferLine = NULL;
 	unsigned long *lpPixelBufferInitial = (unsigned long*)XL_GetBitmapBuffer(hBitmap, 0, 0);
-	unsigned long *lpPixelBufferTempInitial = (unsigned long*)malloc(sizeof(unsigned long)*bmp.Height*bmp.Width);
-	__int32 scanLengthInDW = bmp.ScanLineLength/4;
+	unsigned long *lpPixelBufferTempInitial = (unsigned long*)malloc(sizeof(unsigned long) * bmp.Height * bmp.Width);
+	int scanLengthInDW = bmp.ScanLineLength / 4;
 
 	unsigned long heightInBytes = bmp.Height * 4;
 	unsigned long *lpPixelBufferTemp = lpPixelBufferTempInitial +  bmp.Height * (bmp.Width - 1);
@@ -140,9 +129,9 @@ void OneDimentionRenderMMX(XL_BITMAP_HANDLE hBitmap, double i_sigma, __int32 i_r
 #pragma omp parallel for 
 	for (int line = 0; line < bmp.Height; ++line)
 	{
-		lpPixelBufferLine = lpPixelBufferInitial + scanLengthInDW*line;
+		lpPixelBufferLine = lpPixelBufferInitial + scanLengthInDW * line;
 		lpPixelBufferTemp = lpPixelBufferTempEnd + line;
-		horizontal_mmx_fir_line(radius,  bmp.Width,  heightInBytes,  weightInt, lpPixelBufferTemp, lpPixelBufferLine);
+		Horizontal_mmx_fir_line(radius,  bmp.Width,  heightInBytes,  weightInt, lpPixelBufferTemp, lpPixelBufferLine);
 	}
 
 	unsigned long *lpPixelBufferDest;
@@ -153,42 +142,49 @@ void OneDimentionRenderMMX(XL_BITMAP_HANDLE hBitmap, double i_sigma, __int32 i_r
 	{
 		lpPixelBufferLine = lpPixelBufferTempInitial + column * bmp.Height; // 线头
 		lpPixelBufferDest = lpPixelBufferDestEnd + column; // 线尾
-		vertical_mmx_fir_line(radius, bmp.ScanLineLength, bmp.Height, weightInt, lpPixelBufferDest, lpPixelBufferLine);
+		Vertical_mmx_fir_line(radius, bmp.ScanLineLength, bmp.Height, weightInt, lpPixelBufferDest, lpPixelBufferLine);
 	}
 	delete []weightBufferInitial;
 	free(lpPixelBufferTempInitial);
 }
 
-void OneDimentionRenderSSE(XL_BITMAP_HANDLE hBitmap, double m_sigma, __int32 m_radius)
+#ifdef DEBUG
+void GaussianFunction(float sigma, int r, float ** results);
+void GaussianFunction2(float sigma, int r, float **results);
+/*
+这个方法在正式版本中没有用到, SSE的性能并不好
+
+但是, 我在考虑用它来实现模糊系数比较小, 图片也比较小(例如字体)的模糊. 
+因为, 丢失精度的, 半径为1的高斯核会变成(0, 256, 0)这样, 跟没做模糊没区别. 
+*/
+void OneDimentionRenderSSE(XL_BITMAP_HANDLE hBitmap, float m_sigma, int m_radius)
 {
-	__int16 red = 256;
-	__int16 red2 = red<<6;
 	assert(hBitmap);
 	XLBitmapInfo bmp;
 	XL_GetBitmapInfo(hBitmap, &bmp);
 
 	assert(bmp.ColorType == XLGRAPHIC_CT_ARGB32);
 
-	__int32 diameter = m_radius * 2 + 1;
-	float *weight;
+	int diameter = m_radius * 2 + 1;
+	float *weight = NULL;
 	GaussianFunction(m_sigma, m_radius, &weight);
 
-	unsigned long *lpPixelBufferLine;
+	unsigned long *lpPixelBufferLine = NULL;
 	unsigned long *lpPixelBufferInitial = (unsigned long*)XL_GetBitmapBuffer(hBitmap, 0, 0);
 	unsigned long *lpPixelBufferTempInitial = (unsigned long*)malloc(sizeof(unsigned long)*bmp.Height*bmp.Width);
 
-	__int32 lo = 0;
-	__int32 hi = 0;
-	lo = 0;
-	hi = bmp.Width - 1;
+	int lo = 0;
+	int hi =  bmp.Width - 1;
+	int scanLineLengthInPixel = bmp.ScanLineLength / 4;
 
 	for (int line = 0; line < bmp.Height; ++line)
 	{
-		lpPixelBufferLine = lpPixelBufferInitial + bmp.ScanLineLength/4*line;
+		lpPixelBufferLine = lpPixelBufferInitial + scanLineLengthInPixel*line;
 		unsigned long *lpPixelBufferTemp = lpPixelBufferTempInitial + line;
-		for (__int32 col = 0; col < bmp.Width; ++col)
+		for (int col = 0; col < bmp.Width; ++col)
 		{
-			_asm{
+			_asm
+			{
 				mov edx, diameter;
 				mov ecx, weight;让ecx指向weight的首地址, 每次循环加4byte(1个float那么长)指向weight[m_radius+j];
 start_loop_h:
@@ -254,8 +250,9 @@ ls_than_high_h:
 		lpPixelBufferLine = lpPixelBufferTempInitial + column * bmp.Height;
 		for (int row = 0; row < bmp.Height; ++row)
 		{
-			unsigned long *lpPixelBuffer = lpPixelBufferInitial + bmp.ScanLineLength/4*row + column;
-			_asm{
+			unsigned long *lpPixelBuffer = lpPixelBufferInitial + scanLineLengthInPixel * row + column;
+			_asm
+			{
 				mov edx, m_radius;
 				imul edx, 2;
 				add edx, 1;
@@ -315,7 +312,7 @@ FIR高斯模糊的两个维度叠加模糊的c++实现;
 没有进行转置, 也没有另外开辟图片一样大小的内存空间来放中间结果
 这个实现只是为了验证两个维度叠加的高斯模糊和两个维度同时计算的高斯模糊是一样的, 不会最终使用, 因为太慢了!
 */
-void OneDimentionRender(XL_BITMAP_HANDLE hBitmap, double m_sigma, int m_radius)
+void OneDimentionRender(XL_BITMAP_HANDLE hBitmap, float m_sigma, int m_radius)
 {
 	assert(hBitmap);
 	XLBitmapInfo bmp;
@@ -324,23 +321,25 @@ void OneDimentionRender(XL_BITMAP_HANDLE hBitmap, double m_sigma, int m_radius)
 	assert(bmp.ColorType == XLGRAPHIC_CT_ARGB32);
 
 	int diameter = m_radius * 2 + 1;
-	float *weight;
+	float *weight = NULL;
 	GaussianFunction(m_sigma, m_radius, &weight);
 
 	unsigned long *lpPixelBufferLine;
 	unsigned long *lpPixelBufferInitial = (unsigned long*)XL_GetBitmapBuffer(hBitmap, 0, 0);
+	int scanLineLengthInPixel = bmp.ScanLineLength / 4;
+	int bmpWidthInBytes = bmp.Width * 4;
 
+	lpPixelBufferLine = new unsigned long [bmp.Width];
 	for (int line = 0; line < bmp.Height; ++line)
 	{
-		lpPixelBufferLine = new unsigned long [bmp.Width];
-		memcpy(lpPixelBufferLine, lpPixelBufferInitial + bmp.ScanLineLength/4*line, bmp.Width * 4);
+		memcpy(lpPixelBufferLine, lpPixelBufferInitial + scanLineLengthInPixel * line, bmpWidthInBytes);
 		for (int col = 0; col < bmp.Width; ++col)
 		{
-			unsigned long *lpPixelBuffer = lpPixelBufferInitial + bmp.ScanLineLength/4*line + col;
-			double redSum = 0;
-			double greenSum = 0;
-			double blueSum = 0;
-			double alphaSum = 0;
+			unsigned long *lpPixelBuffer = lpPixelBufferInitial + scanLineLengthInPixel * line + col;
+			float redSum = 0;
+			float greenSum = 0;
+			float blueSum = 0;
+			float alphaSum = 0;
 			for (int j = -m_radius; j <= m_radius; j++)
 			{
 				unsigned long pixelBuffer;
@@ -361,10 +360,10 @@ void OneDimentionRender(XL_BITMAP_HANDLE hBitmap, double m_sigma, int m_radius)
 				unsigned int green = XLCOLOR_BGRA_G(pixelBuffer);
 				unsigned int red = XLCOLOR_BGRA_R(pixelBuffer);
 				unsigned int blue = XLCOLOR_BGRA_B(pixelBuffer);
-				redSum += red * weight[j+m_radius];
-				greenSum += green * weight[j+m_radius];
-				blueSum += blue * weight[j+m_radius];
-				alphaSum += alpha * weight[j+m_radius];
+				redSum += red * weight[j + m_radius];
+				greenSum += green * weight[j + m_radius];
+				blueSum += blue * weight[j + m_radius];
+				alphaSum += alpha * weight[j + m_radius];
 			}
 			unsigned int alpha = alphaSum;
 			unsigned int green = greenSum;
@@ -372,26 +371,26 @@ void OneDimentionRender(XL_BITMAP_HANDLE hBitmap, double m_sigma, int m_radius)
 			unsigned int blue = blueSum;
 			*lpPixelBuffer = XLCOLOR_BGRA(blue, green, red, alpha);
 		}
-		delete []lpPixelBufferLine;
 	}
+	delete []lpPixelBufferLine;
+	lpPixelBufferLine = new unsigned long [bmp.Height];
 	for (int column = 0; column < bmp.Width; ++column)
 	{
-		lpPixelBufferLine = new unsigned long [bmp.Height];
 		for (int row = 0; row < m_radius; ++row)
 		{
-			lpPixelBufferLine[row] = *(lpPixelBufferInitial + bmp.ScanLineLength/4*row + column);
+			lpPixelBufferLine[row] = *(lpPixelBufferInitial + scanLineLengthInPixel * row + column);
 		}
 		for (int row = 0; row < bmp.Height; ++row)
 		{
 			if (row + m_radius < bmp.Height)
 			{
-				lpPixelBufferLine[row+m_radius] = *(lpPixelBufferInitial + bmp.ScanLineLength/4*(row+m_radius)+column);
+				lpPixelBufferLine[row + m_radius] = *(lpPixelBufferInitial + scanLineLengthInPixel * (row + m_radius) + column);
 			}
-			unsigned long *lpPixelBuffer = lpPixelBufferInitial + bmp.ScanLineLength/4*row + column;
-			double redSum = 0;
-			double greenSum = 0;
-			double blueSum = 0;
-			double alphaSum = 0;
+			unsigned long *lpPixelBuffer = lpPixelBufferInitial + scanLineLengthInPixel * row + column;
+			float redSum = 0;
+			float greenSum = 0;
+			float blueSum = 0;
+			float alphaSum = 0;
 			for (int j = -m_radius; j <= m_radius; j++)
 			{
 				unsigned long pixelBuffer;
@@ -401,20 +400,20 @@ void OneDimentionRender(XL_BITMAP_HANDLE hBitmap, double m_sigma, int m_radius)
 				}
 				else if (row + j >= bmp.Height)
 				{
-					pixelBuffer = lpPixelBufferLine[bmp.Height-1];
+					pixelBuffer = lpPixelBufferLine[bmp.Height - 1];
 				}
 				else
 				{
-					pixelBuffer = lpPixelBufferLine[row+j];
+					pixelBuffer = lpPixelBufferLine[row + j];
 				}
 				unsigned int alpha = XLCOLOR_BGRA_A(pixelBuffer);
 				unsigned int green = XLCOLOR_BGRA_G(pixelBuffer);
 				unsigned int red = XLCOLOR_BGRA_R(pixelBuffer);
 				unsigned int blue = XLCOLOR_BGRA_B(pixelBuffer);
-				redSum += red * weight[j+m_radius];
-				greenSum += green * weight[j+m_radius];
-				blueSum += blue * weight[j+m_radius];
-				alphaSum += alpha * weight[j+m_radius];
+				redSum += red * weight[j + m_radius];
+				greenSum += green * weight[j + m_radius];
+				blueSum += blue * weight[j + m_radius];
+				alphaSum += alpha * weight[j + m_radius];
 			}
 			unsigned int alpha = alphaSum;
 			unsigned int green = greenSum;
@@ -422,15 +421,15 @@ void OneDimentionRender(XL_BITMAP_HANDLE hBitmap, double m_sigma, int m_radius)
 			unsigned int blue = blueSum;
 			*lpPixelBuffer = XLCOLOR_BGRA(blue, green, red, alpha);
 		}
-		delete []lpPixelBufferLine;
 	}
+	delete []lpPixelBufferLine;
 }
 
 /*
 memcpy bmp.Height 次调用在bmp.Width * 4长度上
 XL_GetBitmapBuffer 1次
 */
-void TwoDimentionRender(XL_BITMAP_HANDLE hBitmap, double m_sigma, int m_radius)
+void TwoDimentionRender(XL_BITMAP_HANDLE hBitmap, float m_sigma, int m_radius)
 {
 	assert(hBitmap);
 	XLBitmapInfo bmp;
@@ -439,7 +438,7 @@ void TwoDimentionRender(XL_BITMAP_HANDLE hBitmap, double m_sigma, int m_radius)
 	assert(bmp.ColorType == XLGRAPHIC_CT_ARGB32);
 
 	int diameter = m_radius * 2 + 1;
-	double *weight;
+	float *weight = NULL;
 	GaussianFunction2(m_sigma, m_radius, &weight);
 	unsigned long **lpPixelBufferLines = new unsigned long* [bmp.Height];
 	unsigned long *lpPixelBufferInitial = (unsigned long*)XL_GetBitmapBuffer(hBitmap, 0,0);
@@ -457,27 +456,27 @@ void TwoDimentionRender(XL_BITMAP_HANDLE hBitmap, double m_sigma, int m_radius)
 	for (int line = 0; line < bmp.Height; ++line)
 	{
 		// bitmap这一行的内存首地址
-		unsigned long *lpPixelBufferBmpLine = lpPixelBufferInitial + lineWidth/4 * line;
+		unsigned long *lpPixelBufferBmpLine = lpPixelBufferInitial + lineWidth / 4 * line;
 		// 把m_radius行之前的buffer释放掉, 因为后面都用不到了
 		if ( line >= m_radius + 1)
 		{
-			delete []lpPixelBufferLines[line - m_radius-1];
+			delete []lpPixelBufferLines[line - m_radius - 1];
 		}
 		// 提前加载m_radius行之后的line, 因为要用到
 		if (line + m_radius < bmp.Height)
 		{
 			lpPixelBufferLines[line + m_radius] = new unsigned long[bmp.Width];
-			unsigned long *lpPixelBufferBmpLinePlusRadius = lpPixelBufferInitial + lineWidth/4 * (line + m_radius);
+			unsigned long *lpPixelBufferBmpLinePlusRadius = lpPixelBufferInitial + lineWidth / 4 * (line + m_radius);
 			memcpy(lpPixelBufferLines[line + m_radius], lpPixelBufferBmpLinePlusRadius, bmp.Width * 4);
 		}
 
 		for (int col = 0; col < bmp.Width; ++col)
 		{
 			unsigned long *lpPixelBuffer = lpPixelBufferBmpLine + col;
-			double redSum = 0;
-			double greenSum = 0;
-			double blueSum = 0;
-			double alphaSum = 0;
+			float redSum = 0;
+			float greenSum = 0;
+			float blueSum = 0;
+			float alphaSum = 0;
 			for ( int i = -m_radius; i <= m_radius; i++)
 			{
 				for (int j = -m_radius; j <= m_radius; j++)
@@ -514,10 +513,10 @@ void TwoDimentionRender(XL_BITMAP_HANDLE hBitmap, double m_sigma, int m_radius)
 					unsigned int green = XLCOLOR_BGRA_G(pixelBuffer);
 					unsigned int red = XLCOLOR_BGRA_R(pixelBuffer);
 					unsigned int blue = XLCOLOR_BGRA_B(pixelBuffer);
-					redSum += red * weight[(i+m_radius)*diameter+(j+m_radius)];
-					greenSum += green * weight[(i+m_radius)*diameter+(j+m_radius)];
-					blueSum += blue * weight[(i+m_radius)*diameter+(j+m_radius)];
-					alphaSum += alpha * weight[(i+m_radius)*diameter+(j+m_radius)];
+					redSum += red * weight[(i + m_radius) * diameter + (j + m_radius)];
+					greenSum += green * weight[(i + m_radius) * diameter + (j + m_radius)];
+					blueSum += blue * weight[(i + m_radius) * diameter + (j + m_radius)];
+					alphaSum += alpha * weight[(i + m_radius) * diameter + (j + m_radius)];
 				}
 			}
 			unsigned int alpha = alphaSum;
@@ -533,71 +532,65 @@ void TwoDimentionRender(XL_BITMAP_HANDLE hBitmap, double m_sigma, int m_radius)
 	}
 	delete []lpPixelBufferLines;
 }
-
-void GaussianFunction(double sigma, int r, float ** results)
+void GaussianFunction(float sigma, int r, float ** results)
 {
-	*results =new float[r*2+1];
-	double sum = 0;
-	double factor = 1.0/sigma/sqrt(2*pi);
-	for ( int i=0; i < r+1; i++)
+	*results =new float[r * 2 + 1];
+	float sum = 0;
+	float factor = 1.0 / sigma / sqrt(2 * pi);
+	for ( int i=0; i < r + 1; i++)
 	{
-		(*results)[i] = exp(0- (i-r)*(i-r)/(2*sigma*sigma)) * factor;
+		(*results)[i] = exp(0 - (i - r) * (i - r) / (2 * sigma * sigma)) * factor;
 		sum += (*results)[i];
 	}
-	for (int i = r+1; i < r*2+1; i++)
+	for (int i = r + 1; i < r * 2 + 1; i++)
 	{
-		(*results)[i] = (*results)[r*2-i];
+		(*results)[i] = (*results)[r * 2 - i];
 		sum += (*results)[i];
 	}
-	assert(sum>0);
-	for (int i = 0; i < r*2+1; i++)
+	for (int i = 0; i < r * 2 + 1; i++)
 	{
 		(*results)[i] /= sum;
 	}
 }
 
-void GaussianFunction2(double sigma, int r, double **results)
+void GaussianFunction2(float sigma, int r, float **results)
 {
-	int D = r*2+1;
-	*results = new double[D*D];
-	double sum = 0;
-	double factor = 1.0/2/pi/sigma/sigma;
-	for ( int i = 0;i < r + 1; i++)
+	int D = r * 2 + 1;
+	*results = new float[D * D];
+	float sum = 0;
+	float factor = 1.0 / 2 / pi / sigma / sigma;
+	for ( int i = 0; i < r + 1; i++)
 	{
-		for (int j = 0; j < r+1; j++)
+		for (int j = 0; j < r + 1; j++)
 		{
-			(*results)[i*D+j] = exp(0 - ((i-r)*(i-r) + (j-r)*(j-r))/(2*sigma*sigma)) * factor; 
-			sum += (*results)[i*D+j];
+			(*results)[i * D + j] = exp(0 - ((i - r) * (i - r) + (j - r) * (j - r)) / (2 * sigma * sigma)) * factor; 
+			sum += (*results)[i * D + j];
 		}
 	}
-	for (int i = r+1; i < D; i++)
+	for (int i = r + 1; i < D; i++)
 	{
-		for (int j= 0; j < r+1; j++)
+		for (int j= 0; j < r + 1; j++)
 		{
-			(*results)[i*D+j] = (*results)[(r*2-i)*D+j];
-			sum += (*results)[i*D+j];
+			(*results)[i * D + j] = (*results)[(r * 2 - i) * D + j];
+			sum += (*results)[i * D + j];
 		}
 	}
-	for (int i = 0; i < r+1; i++)
+	for (int i = 0; i < r + 1; i++)
 	{
-		for (int j = r+1; j < D; j++)
+		for (int j = r + 1; j < D; j++)
 		{
-			(*results)[i*D+j] = (*results)[i*D+(r*2-j)];
-			sum += (*results)[i*D+j];
+			(*results)[i * D + j] = (*results)[i * D + (r * 2 - j)];
+			sum += (*results)[i * D + j];
 		}
 	}
-	for (int i = r+1; i<D; i++)
+	for (int i = r + 1; i < D; i++)
 	{
-		for (int j = r+1; j< D; j++)
+		for (int j = r + 1; j < D; j++)
 		{
-			(*results)[i*D+j] = (*results)[(r*2-i)*D+(r*2-j)];
-			sum += (*results)[i*D+j];
+			(*results)[i * D + j] = (*results)[(r * 2 - i) * D + (r * 2 - j)];
+			sum += (*results)[i * D + j];
 		}
-	}
-	double watch[49];
-	for (int i = 0;i < D*D; i++)
-	{
-		(*results)[i] /= sum;
-		watch[i] = (*results)[i];
 	}
 }
+
+#endif

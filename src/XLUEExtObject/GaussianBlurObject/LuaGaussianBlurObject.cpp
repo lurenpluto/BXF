@@ -14,9 +14,9 @@ LuaGaussianBlurObject::~LuaGaussianBlurObject(void)
 {
 }
 
-double LuaGaussianBlurObject::GetSigmaFromString(const char* lpSigma)
+float LuaGaussianBlurObject::GetSigmaFromString(const char* lpSigma)
 {
-	double ret = atof(lpSigma);
+	float ret = atof(lpSigma);
 	return ret;
 }
 
@@ -26,8 +26,8 @@ const XLLRTGlobalAPI LuaGaussianBlurObject::s_szLuaMemberFuncs[] =
 	{"GetSigma", GetSigma},
 	{"SetRadius", SetRadius},
 	{"GetRadius", GetRadius}, 
-	{"SetType", SetType},
-	{"GetType", GetType},
+	{"SetGaussianType", SetGaussianType},
+	{"GetGaussianType", GetGaussianType},
 	{NULL, NULL}
 };
 
@@ -37,7 +37,7 @@ int LuaGaussianBlurObject::SetSigma( lua_State* luaState )
 	GaussianBlurObject* lpExtObj = CheckExtObject(luaState, 1);
 	if (lpExtObj != NULL)
 	{
-		double lpSigma = luaL_checknumber(luaState, 2);
+		float lpSigma = luaL_checknumber(luaState, 2);
 		lpExtObj->SetSigma(lpSigma);
 	}
 
@@ -49,7 +49,7 @@ int LuaGaussianBlurObject::GetSigma( lua_State* luaState )
 	GaussianBlurObject* lpExtObj = CheckExtObject(luaState, 1);
 	if (lpExtObj != NULL)
 	{
-		double sigma = lpExtObj->GetSigma();
+		float sigma = lpExtObj->GetSigma();
 		lua_pushnumber(luaState, sigma);
 		return 1;
 	}
@@ -84,24 +84,24 @@ int LuaGaussianBlurObject::GetRadius( lua_State* luaState )
 	return 1;
 }
 
-int LuaGaussianBlurObject::SetType( lua_State* luaState )
+int LuaGaussianBlurObject::SetGaussianType( lua_State* luaState )
 {
 	GaussianBlurObject* lpExtObj = CheckExtObject(luaState, 1);
 	if (lpExtObj != NULL)
 	{
 		const char* type = luaL_checkstring(luaState, 2);
-		lpExtObj->SetType(type);
+		lpExtObj->SetGaussianType(type);
 	}
 
 	return 0;
 }
 
-int LuaGaussianBlurObject::GetType( lua_State* luaState )
+int LuaGaussianBlurObject::GetGaussianType( lua_State* luaState )
 {
 	GaussianBlurObject* lpExtObj = CheckExtObject(luaState, 1);
 	if (lpExtObj != NULL)
 	{
-		const char* type = lpExtObj->GetType();
+		const char* type = lpExtObj->GetGaussianType();
 		lua_pushstring(luaState, type);
 		return 1;
 	}

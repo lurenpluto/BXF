@@ -4,8 +4,9 @@
 /* found in the LICENSE file.
 ********************************************************************/ 
 #include "stdafx.h"
+
 #include "./GaussianBlurObject.h"
-#include "GaussianBlurDelegate.h"
+#include "./GaussianBlurDelegate.h"
 
 #include <iostream>
 #include <time.h>
@@ -22,7 +23,7 @@ GaussianBlurObject::~GaussianBlurObject(void)
 {
 }
 
-void GaussianBlurObject::SetSigma(double sigma)
+void GaussianBlurObject::SetSigma(const float &sigma)
 {
 	if (m_sigma == sigma)
 	{
@@ -32,20 +33,39 @@ void GaussianBlurObject::SetSigma(double sigma)
 	PushDirtyRect(NULL);
 }
 
-void GaussianBlurObject::SetType(const char *type)
+float GaussianBlurObject::GetSigma() const
 {
-	Type iType = UnDefined;
-	if (strcmp(type, "IIR"))
+	return m_sigma;
+}
+
+void GaussianBlurObject::SetRadius(const int &radius)
+{
+	m_radius = radius;
+}
+
+int GaussianBlurObject::GetRadius() const
+{
+	return m_radius;
+}
+
+void GaussianBlurObject::SetGaussianType(const char *type)
+{
+	Type iType;
+	if (strcmp(type, "IIR") == 0)
 	{
 		iType = DirecheIIRSSE;
 	} 
-	else if (strcmp(type, "FIR"))
+	else if (strcmp(type, "FIR") == 0)
 	{
 		iType = OneDimentionMMX;
 	}
-	else if (strcmp(type, "Default"))
+	else if (strcmp(type, "Default") == 0)
 	{
 		iType = Default;
+	}
+	else
+	{
+		iType = UnDefined;
 	}
 	if (iType != m_type && iType != UnDefined)
 	{
@@ -54,7 +74,7 @@ void GaussianBlurObject::SetType(const char *type)
 	}
 }
 
-const char *GaussianBlurObject::GetType()const
+const char *GaussianBlurObject::GetGaussianType()const
 {
 	if (m_type == DirecheIIRSSE)
 	{
@@ -68,30 +88,29 @@ const char *GaussianBlurObject::GetType()const
 	{
 		return "Default";
 	}
+	else 
+	{
+		return "UnDefined";
+	}
 }
 
 void GaussianBlurObject::OnPaint( XL_BITMAP_HANDLE hBitmapDest, const RECT* lpDestClipRect, const RECT* lpSrcClipRect, unsigned char /*alpha*/ )
 {
-	clock_t time1 = clock();
-
-	assert(lpSrcClipRect);
-	const RECT* pos = GetPos();
-
-	XL_BITMAP_HANDLE hClipBitmap = XL_ClipSubBindBitmap(hBitmapDest, lpDestClipRect);
-	assert(hClipBitmap);
-
-	if (m_radius > 0 && m_sigma >0)
+	if (m_radius > 0 && m_sigma >0 && m_type > UnDefined && m_type < ValidType)
 	{
+		assert(lpSrcClipRect);
+		const RECT* pos = GetPos();
+
+		XL_BITMAP_HANDLE hClipBitmap = XL_ClipSubBindBitmap(hBitmapDest, lpDestClipRect);
+		assert(hClipBitmap);
 		// FIR ÐÍÂË²¨
 		if (m_type == OneDimentionMMX)
 		{
-			for (int i = 0; i < 1; i++)
 			OneDimentionRenderMMX(hClipBitmap, m_sigma, m_radius);
 		}
 		// IIR ÐÍÂË²¨
 		else if (m_type == DirecheIIRSSE)
 		{
-			for (int i = 0; i < 1; i++)
 			DericheIIRRenderSSE(hClipBitmap, m_sigma);
 		}
 		else if (m_type == Default)
@@ -105,9 +124,6 @@ void GaussianBlurObject::OnPaint( XL_BITMAP_HANDLE hBitmapDest, const RECT* lpDe
 				DericheIIRRenderSSE(hClipBitmap, m_sigma);
 			}
 		}
+		XL_ReleaseBitmap(hClipBitmap);
 	}
-
-	XL_ReleaseBitmap(hClipBitmap);
-	clock_t time2=clock();
-	float diff = (((float)time2 - (float)time1) / 1000000.0F ) * 1000; 
 }

@@ -18,7 +18,10 @@ function OnMouseWheel(self, x, y, distance, flags)
 	self:SetRadius(newRadius)
 	self:SetSigma(newSigma)
 	
-	local type_ = self:GetType()
+	local type_ = "IIR"
+	if newRadius <= 5 then type_ = "FIR" end
+	self:SetGaussianType(type_)
+	
 	local objectTree = self:GetOwner()
 	local textObj = objectTree:GetUIObject("text")
 	if textObj then textObj:SetText("模糊系数:"..newSigma.." 模糊方法:"..type_) end

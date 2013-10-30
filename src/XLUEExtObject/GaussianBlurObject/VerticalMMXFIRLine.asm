@@ -1,12 +1,17 @@
-;void vertical_mmx_fir_line(__int32 radius, __int32 scanLengthInBytes, __int32 height, __int16 *weightInt, unsigned long *lpPixelBufferDest, unsigned long *lpPixelBufferLine);
+; /********************************************************************
+; /* Copyright (c) 2013 The BOLT UIEngine. All rights reserved.
+; /* Use of this source code is governed by a BOLT license that can be
+; /* found in the LICENSE file.
+; ********************************************************************/ 
+;void Vertical_mmx_fir_line(int radius, int scanLengthInBytes, int height, int *weightInt, unsigned long *lpPixelBufferDest, unsigned long *lpPixelBufferLine);
 
 BITS 32
 
 SECTION .text			
-global _vertical_mmx_fir_line
+global _Vertical_mmx_fir_line
 
 
-_vertical_mmx_fir_line:
+_Vertical_mmx_fir_line:
 
 	push ebp
 	mov ebp, esp

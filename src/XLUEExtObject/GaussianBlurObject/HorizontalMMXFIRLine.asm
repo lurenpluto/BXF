@@ -1,11 +1,16 @@
-;void horizontal_mmx_fir_line(__int32 radius, __int32 width, __int32 heightInBytes, __int16 *weightInt, unsigned long *lpPixelBufferTemp, unsigned long *lpPixelBufferLine);
+; /********************************************************************
+; /* Copyright (c) 2013 The BOLT UIEngine. All rights reserved.
+; /* Use of this source code is governed by a BOLT license that can be
+; /* found in the LICENSE file.
+; ********************************************************************/ 
+;void Horizontal_mmx_fir_line(int radius, int width, int heightInBytes, int *weightInt, unsigned long *lpPixelBufferTemp, unsigned long *lpPixelBufferLine);
 			
 BITS 32
 
 SECTION .text			
-global _horizontal_mmx_fir_line
+global _Horizontal_mmx_fir_line
 
-_horizontal_mmx_fir_line:
+_Horizontal_mmx_fir_line:
 	push ebp
 	mov ebp, esp
 	sub esp, 0x10;  
@@ -24,7 +29,7 @@ _horizontal_mmx_fir_line:
 	%define lpPixelBufferLine [dword ebp+0x1c]
 
 	mov edi, lpPixelBufferTemp;
-;for (__int32 col =bmp.Width - 1; col >= bmp.Width - radius; col--)
+;for (int col =bmp.Width - 1; col >= bmp.Width - radius; col--)
 			mov ecx, radius;
 border_right_loop_start:
 				mov edx, ecx; 
@@ -87,7 +92,7 @@ border_right_loop_end:
 			dec ecx; 
 			jnz border_right_loop_start;
 
-;for (__int32 col = bmp.Width - radius - 1; col >= radius; col--)
+;for (int col = bmp.Width - radius - 1; col >= radius; col--)
 			mov ecx, width;
 			sub ecx, radius;
 			sub ecx, radius;
@@ -129,7 +134,7 @@ mid_loop_start:
 mid_loop_end:
 			dec ecx;
 			jnz mid_loop_start;
-;for (__int32 col = radius - 1; col >= 0; col--)
+;for (int col = radius - 1; col >= 0; col--)
 			mov ecx, radius;
 border_left_loop_start:
 				mov esi, lpPixelBufferLine; 

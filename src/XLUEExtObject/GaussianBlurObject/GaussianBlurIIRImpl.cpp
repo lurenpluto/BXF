@@ -1,5 +1,12 @@
+/********************************************************************
+/* Copyright (c) 2013 The BOLT UIEngine. All rights reserved.
+/* Use of this source code is governed by a BOLT license that can be
+/* found in the LICENSE file.
+********************************************************************/ 
 #include "stdafx.h"
-#include "GaussianBlurDelegate.h"
+
+#include "./GaussianBlurDelegate.h"
+
 #include <cmath>
 #include <mmintrin.h>  //MMX
 #include <xmmintrin.h> //SSE
@@ -10,19 +17,102 @@
 #include <nmmintrin.h> //SSE4.2
 #include <omp.h>
 
-inline void assignLongTo4Floats(float* out, unsigned long *in)
+
+/* Calcualte Gaussian Blur Filter Coefficiens
+ *  alpha -> smooting gradient depends on sigma
+ *  k = ((1-e^-alpha)^2)/(1+2*alpha*e^-alpha - e^-2alpha)
+ *  a0 = k; a1 = k*(alpha-1)*e^-alpha; a2 = k*(alpha+1)*e^-alpha; a3 = -k*e^(-2*alpha)
+ *  b1 = -2*e^-alpha; b2 = e^(-2*alpha)
+ */
+void CalGaussianCoeff( float sigma,  float *a0, float *a1, float *a2, float *a3, float *b1, float *b2, float *cprev, float *cnext)
+{
+  float alpha, lamma,  k; 
+  // defensive check
+  if (sigma < 0.5f)
+	  sigma = 0.5f;
+
+  alpha = (float) exp((0.726) * (0.726)) / sigma;
+  lamma = (float)exp(-alpha);
+  *b2 = (float)exp(-2 * alpha);
+  k = (1 - lamma) * (1 - lamma) / (1 + 2 * alpha * lamma - (*b2));
+  *a0 = k;
+  *a1 = k * (alpha - 1) * lamma;
+  *a2 = k * (alpha + 1) * lamma;
+  *a3 = -k * (*b2);
+  *b1 = -2 * lamma;
+  *cprev = (*a0 + *a1) / (1 + *b1 + *b2);
+  *cnext = (*a2 + *a3) / (1 + *b1 + *b2);
+}
+
+extern "C" void Horizontal_sse_iir_line(float *oTemp,  unsigned long* id, float *od, int width, int height, float *a0, float *a1, float *a2, float *a3, float *b1, float *b2, float *cprev, float *cnext);
+extern "C" void Vertical_sse_iir_line(float *oTemp,  float* id, unsigned long *od, int width, int height, float *a0, float *a1, float *a2, float *a3, float *b1, float *b2, float *cprev, float *cnext);
+// 这个方法的C++实现请看DericheIIRRender
+// 这个方法的伪指令实现请看DericheIIRRenderSSEIntrinsics
+// 这个方法的MMX实现还没有做
+void DericheIIRRenderSSE(XL_BITMAP_HANDLE hBitmap, const float &sigma)
+{
+	SYSTEM_INFO sysInfo;
+	GetSystemInfo( &sysInfo );
+	int nCPU = sysInfo.dwNumberOfProcessors;
+	int threadNum = nCPU;
+	omp_set_num_threads(threadNum);
+
+	XLBitmapInfo bmp;
+	XL_GetBitmapInfo(hBitmap, &bmp);
+
+	assert(bmp.ColorType == XLGRAPHIC_CT_ARGB32);
+
+	float a0, a1, a2, a3, b1, b2, cprev, cnext;
+	CalGaussianCoeff(sigma, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext);
+
+	unsigned long *lpPixelBufferInitial = (unsigned long*)XL_GetBitmapBuffer(hBitmap, 0, 0);
+	unsigned long *lpRowInitial = (unsigned long*)XL_GetBitmapBuffer(hBitmap, 0, 1);
+
+	int bufferSizePerThread = (bmp.Width > bmp.Height ? bmp.Width : bmp.Height) * 4;
+	float *oTemp = new float[bufferSizePerThread * threadNum];
+	float *od = new float[bmp.Width * bmp.Height * 4];
+	int scanLineLengthInPixel = bmp.ScanLineLength / 4;
+	
+#pragma omp parallel for 
+	for (int row = 0; row < bmp.Height; ++row)
+	{
+		int tidx = omp_get_thread_num();
+		unsigned long *lpRowInitial = lpPixelBufferInitial + scanLineLengthInPixel * row;
+		float *lpColumnInitial = od + row * 4;
+		float *oTempThread = oTemp + bufferSizePerThread * tidx;
+		Horizontal_sse_iir_line(oTempThread, lpRowInitial, lpColumnInitial, bmp.Width, bmp.Height, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext );
+	}
+
+	int columnLineLengthInBytes = bmp.Height * 4;
+#pragma omp parallel for
+	for (int col = 0; col < bmp.Width; ++col)
+	{
+		int tidx = omp_get_thread_num();
+		unsigned long *lpColInitial = lpPixelBufferInitial + col;
+
+		float *lpRowInitial = od + columnLineLengthInBytes * col;
+		float *oTempThread = oTemp + bufferSizePerThread * tidx;
+		Vertical_sse_iir_line(oTempThread, lpRowInitial, lpColInitial, scanLineLengthInPixel, bmp.Height, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext);
+	}
+
+	delete []oTemp;
+	delete []od;
+}
+
+#ifdef DEBUG
+inline void AssignLongTo4Floats(float* out, unsigned long *in)
 {
 	unsigned int alpha = XLCOLOR_BGRA_A(*in);
 	unsigned int green = XLCOLOR_BGRA_G(*in);
 	unsigned int red = XLCOLOR_BGRA_R(*in);
 	unsigned int blue = XLCOLOR_BGRA_B(*in);
-	out[0] = (double)blue;
-	out[1] = (double)green;
-	out[2] = (double)red;
-	out[3] = (double)alpha;
+	out[0] = (float)blue;
+	out[1] = (float)green;
+	out[2] = (float)red;
+	out[3] = (float)alpha;
 }
 
-inline void assign4FloatsToLong(unsigned long *out, float *in)
+inline void Assign4FloatsToLong(unsigned long *out, float *in)
 {
 	unsigned int blue= in[0];
 	unsigned int green = in[1];
@@ -31,60 +121,33 @@ inline void assign4FloatsToLong(unsigned long *out, float *in)
 	*out = XLCOLOR_BGRA(blue, green, red, alpha);
 }
 
-inline void multi4Floats(float *out, float *in, float *coeff)
+inline void Multi4Floats(float *out, float *in, float *coeff)
 {
 	out[0] = in[0] * (*coeff);
 	out[1] = in[1] * (*coeff);
 	out[2] = in[2] * (*coeff);
 	out[3] = in[3] * (*coeff);
 }
-inline void assign4Floats(float *out, float *in)
+inline void Assign4Floats(float *out, float *in)
 {
 	out[0] = in[0];
 	out[1] = in[1];
 	out[2] = in[2];
 	out[3] = in[3];
 }
-inline void add4Floats(float *out, float *in_l, float *in_r)
+inline void Add4Floats(float *out, float *in_l, float *in_r)
 {
 	out[0] = in_l[0] + in_r[0];
 	out[1] = in_l[1] + in_r[1];
 	out[2] = in_l[2] + in_r[2];
 	out[3] = in_l[3] + in_r[3];
 }
-inline void sub4Floats(float *out, float *in_l, float *in_r)
+inline void Sub4Floats(float *out, float *in_l, float *in_r)
 {
 	out[0] = in_l[0] - in_r[0];
 	out[1] = in_l[1] - in_r[1];
 	out[2] = in_l[2] - in_r[2];
 	out[3] = in_l[3] - in_r[3];
-}
-
-
-/* Calcualte Gaussian Blur Filter Coefficiens
- *  alpha -> smooting gradient depends on sigma
- *  k = ((1-e^-alpha)^2)/(1+2*alpha*e^-alpha - e^-2alpha)
- *  a0 = k; a1 = k*(alpha-1)*e^-alpha; a2 = k*(alpha+1)*e^-alpha; a3 = -k*e^(-2*alpha)
- *  b1 = -2*e^-alpha; b2 = e^(-2*alpha)
- */
-void calGaussianCoeff( float sigma,  float *a0, float *a1, float *a2, float *a3, float *b1, float *b2, float *cprev, float *cnext)
-{
-  float alpha, lamma,  k; 
-  // defensive check
-  if (sigma < 0.5f)
-	  sigma = 0.5f;
-
-  alpha = (float) exp((0.726)*(0.726)) / sigma;
-  lamma = (float)exp(-alpha);
-  *b2 = (float)exp(-2*alpha);
-  k = (1-lamma)*(1-lamma)/(1+2*alpha*lamma- (*b2));
-  *a0 = k;
-  *a1 = k*(alpha-1)*lamma;
-  *a2 = k*(alpha+1)*lamma;
-  *a3 = -k* (*b2);
-  *b1 = -2*lamma;
-  *cprev = (*a0 + *a1)/(1+ *b1 + *b2);
-  *cnext = (*a2 + *a3)/(1+ *b1 + *b2);
 }
 
 /*
@@ -107,7 +170,7 @@ void calGaussianCoeff( float sigma,  float *a0, float *a1, float *a2, float *a3,
 /*
 	//for (int col = 0; col < width; col++)
 	//{
-	//	assignLongTo4Floats(od, id);
+	//	AssignLongTo4Floats(od, id);
 	//	id += 1;
 	//	od += height*4;
 	//}
@@ -127,34 +190,34 @@ void DerichIIRHorizontal(float *oTemp,  unsigned long* id, float *od, int width,
 
 	// 第一遍从左往右的公式是: oTemp[i] = (a0*id[i] + a1*id[i-1]) - (b1*oTemp[i-1] + b2*oTemp[i-2])
 	// 第二遍从右往左的公式是: od[i] = oTemp[i] + (a3*id[i+1] + a4*id[i+2]) - (b1*od[i+1]+b2*od[i+2])
-	assignLongTo4Floats(prevIn, id);
-	multi4Floats(prevOut, prevIn, cprev);
-	assign4Floats(prev2Out, prevOut);
+	AssignLongTo4Floats(prevIn, id);
+	Multi4Floats(prevOut, prevIn, cprev);
+	Assign4Floats(prev2Out, prevOut);
 	for (int x = 0; x < width; ++x)
 	{
-		assignLongTo4Floats(currIn, id);
-		multi4Floats(currComp, currIn, a0);
-		multi4Floats(temp1, prevIn, a1);
-		multi4Floats(temp2, prevOut, b1);
-		multi4Floats(temp3, prev2Out, b2);
-		add4Floats(currComp, currComp, temp1);
-		add4Floats(temp2, temp2, temp3);
-		assign4Floats(prev2Out, prevOut);
-		sub4Floats(prevOut, currComp, temp2);
-		assign4Floats(prevIn, currIn);
+		AssignLongTo4Floats(currIn, id);
+		Multi4Floats(currComp, currIn, a0);
+		Multi4Floats(temp1, prevIn, a1);
+		Multi4Floats(temp2, prevOut, b1);
+		Multi4Floats(temp3, prev2Out, b2);
+		Add4Floats(currComp, currComp, temp1);
+		Add4Floats(temp2, temp2, temp3);
+		Assign4Floats(prev2Out, prevOut);
+		Sub4Floats(prevOut, currComp, temp2);
+		Assign4Floats(prevIn, currIn);
 
-		assign4Floats(oTemp, prevOut);
-		oTemp+=4;
-		id+=1;
+		Assign4Floats(oTemp, prevOut);
+		oTemp += 4;
+		id += 1;
 	}
 	id -= 1;
-	od += 4*height*(width-1);// 最后一行行首
+	od += 4 * height * (width - 1);// 最后一行行首
 	oTemp -= 4;
 	
-	assignLongTo4Floats(prevIn, id);
-	multi4Floats(prev2Out, prevIn, cnext);
-	assign4Floats(prevOut, prev2Out);
-	assign4Floats(currIn, prevIn);
+	AssignLongTo4Floats(prevIn, id);
+	Multi4Floats(prev2Out, prevIn, cnext);
+	Assign4Floats(prevOut, prev2Out);
+	Assign4Floats(currIn, prevIn);
 
 	a0 = a2;
 	a1 = a3;
@@ -164,24 +227,24 @@ void DerichIIRHorizontal(float *oTemp,  unsigned long* id, float *od, int width,
 
 	for (int x = width - 1; x >= 0; --x)
 	{
-		assignLongTo4Floats(inNext, id);
-		assign4Floats(output, oTemp);
+		AssignLongTo4Floats(inNext, id);
+		Assign4Floats(output, oTemp);
 
-		multi4Floats(currComp, currIn, a0);
-		multi4Floats(temp1, prevIn, a1);
-		multi4Floats(temp2, prevOut, b1);
-		multi4Floats(temp3, prev2Out, b2);
-		add4Floats(currComp, currComp, temp1);
-		add4Floats(temp2, temp2, temp3);
-		assign4Floats(prev2Out, prevOut);
-		sub4Floats(prevOut, currComp, temp2);
-		assign4Floats(prevIn, currIn);
-		assign4Floats(currIn, inNext);
-		add4Floats(output, output, prevOut);
+		Multi4Floats(currComp, currIn, a0);
+		Multi4Floats(temp1, prevIn, a1);
+		Multi4Floats(temp2, prevOut, b1);
+		Multi4Floats(temp3, prev2Out, b2);
+		Add4Floats(currComp, currComp, temp1);
+		Add4Floats(temp2, temp2, temp3);
+		Assign4Floats(prev2Out, prevOut);
+		Sub4Floats(prevOut, currComp, temp2);
+		Assign4Floats(prevIn, currIn);
+		Assign4Floats(currIn, inNext);
+		Add4Floats(output, output, prevOut);
 
-		assign4Floats(od, output);
+		Assign4Floats(od, output);
 		id -= 1;
-		od -= 4*height;
+		od -= 4 * height;
 		oTemp -= 4;
 	}
 }
@@ -223,7 +286,7 @@ void DerichIIRHorizontalSSEIntrinsics(float *oTemp,  unsigned long* id, float *o
 	}
 
 	id -= 1;
-	od += 4*height*(width-1);//输出的最后一行, 不一定是行首, 当前输入行在原图中时第y行, 则od的位置应指向输出的最后一行的第y列, 见上图id, oTemp, od的转换关系
+	od += 4 * height * (width - 1);//输出的最后一行, 不一定是行首, 当前输入行在原图中时第y行, 则od的位置应指向输出的最后一行的第y列, 见上图id, oTemp, od的转换关系
 	oTemp -= 4;
 
 	coeft = _mm_load_ss((float*)cnext);
@@ -257,7 +320,7 @@ void DerichIIRHorizontalSSEIntrinsics(float *oTemp,  unsigned long* id, float *o
 		_mm_storeu_ps((float*)od, output);
 		
 		id -= 1;
-		od -= 4*height;
+		od -= 4 * height;
 		oTemp -= 4;
 	}
 }
@@ -278,7 +341,7 @@ void DerichIIRHorizontalSSEIntrinsics(float *oTemp,  unsigned long* id, float *o
 	无模糊输出的结果应该是
 	for (int col = 0; col < height; col++)
 	{
-		assign4FloatsToLong(od, id);
+		Assign4FloatsToLong(od, id);
 		od += width;
 		id += 4;
 	}
@@ -296,60 +359,60 @@ void DerichIIRVertical(float *oTemp, float *id, unsigned long *od, int height, i
 	float temp2[4];
 	float temp3[4];
 
-	assign4Floats(prevIn, id);
-	multi4Floats(prev2Out, prevIn, cprev);
-	assign4Floats(prevOut, prev2Out);
+	Assign4Floats(prevIn, id);
+	Multi4Floats(prev2Out, prevIn, cprev);
+	Assign4Floats(prevOut, prev2Out);
 
 	for (int col = 0; col < height; col++)
 	{
-		assign4Floats(currIn, id);
+		Assign4Floats(currIn, id);
 
-		multi4Floats(currComp, currIn, a0);
-		multi4Floats(temp1, prevIn, a1);
-		multi4Floats(temp2, prevOut, b1);
-		multi4Floats(temp3, prev2Out, b2);
+		Multi4Floats(currComp, currIn, a0);
+		Multi4Floats(temp1, prevIn, a1);
+		Multi4Floats(temp2, prevOut, b1);
+		Multi4Floats(temp3, prev2Out, b2);
 
-		add4Floats(currComp, currComp, temp1);
-		add4Floats(temp2, temp2, temp3);
-		assign4Floats(prev2Out, prevOut);
-		sub4Floats(prevOut, currComp, temp2);
-		assign4Floats(prevIn, currIn);
-		assign4Floats(oTemp, prevOut);
+		Add4Floats(currComp, currComp, temp1);
+		Add4Floats(temp2, temp2, temp3);
+		Assign4Floats(prev2Out, prevOut);
+		Sub4Floats(prevOut, currComp, temp2);
+		Assign4Floats(prevIn, currIn);
+		Assign4Floats(oTemp, prevOut);
 
 		oTemp += 4;
 		id += 4;
 	}
 	id -= 4;
 	oTemp -= 4;
-	od += width*(height-1);
+	od += width * (height - 1);
 
 	a0 = a2;
 	a1 = a3;
-	assign4Floats(prevIn, id);
-	assign4Floats(currIn, prevIn);
-	multi4Floats(prev2Out, prevIn, cnext);
-	assign4Floats(prevOut, prev2Out);
+	Assign4Floats(prevIn, id);
+	Assign4Floats(currIn, prevIn);
+	Multi4Floats(prev2Out, prevIn, cnext);
+	Assign4Floats(prevOut, prev2Out);
 
 	float inNext[4];
 	float output[4];
 	for(int row = height - 1; row >= 0; row--)
 	{
-		assign4Floats(inNext, id);
-		assign4Floats(output, oTemp);
-		multi4Floats(currComp, currIn, a0);
-		multi4Floats(temp1, prevIn, a1);
-		multi4Floats(temp2, prevOut, b1);
-		multi4Floats(temp3, prev2Out, b2);
+		Assign4Floats(inNext, id);
+		Assign4Floats(output, oTemp);
+		Multi4Floats(currComp, currIn, a0);
+		Multi4Floats(temp1, prevIn, a1);
+		Multi4Floats(temp2, prevOut, b1);
+		Multi4Floats(temp3, prev2Out, b2);
 
-		add4Floats(currComp, currComp, temp1);
-		add4Floats(temp2, temp2, temp3);
-		assign4Floats(prev2Out, prevOut);
-		sub4Floats(prevOut, currComp, temp2);
-		assign4Floats(prevIn, currIn);
-		assign4Floats(currIn, inNext);
+		Add4Floats(currComp, currComp, temp1);
+		Add4Floats(temp2, temp2, temp3);
+		Assign4Floats(prev2Out, prevOut);
+		Sub4Floats(prevOut, currComp, temp2);
+		Assign4Floats(prevIn, currIn);
+		Assign4Floats(currIn, inNext);
 
-		add4Floats(output, output, prevOut);
-		assign4FloatsToLong(od, output);
+		Add4Floats(output, output, prevOut);
+		Assign4FloatsToLong(od, output);
 		
 		id -= 4;
 		od -= width;
@@ -439,11 +502,7 @@ void DerichIIRVerticalSSEIntrinsics(float *oTemp, float *id, unsigned long *od, 
 	}
 }
 
-extern "C" void horizontal_sse_iir_line(float *oTemp,  unsigned long* id, float *od, int width, int height, float *a0, float *a1, float *a2, float *a3, float *b1, float *b2, float *cprev, float *cnext);
-extern "C" void vertical_sse_iir_line(float *oTemp,  float* id, unsigned long *od, int width, int height, float *a0, float *a1, float *a2, float *a3, float *b1, float *b2, float *cprev, float *cnext);
-// 这个方法的C++实现请看DericheIIRRender
-// 这个方法的伪指令实现请看DericheIIRRenderSSEIntrinsics
-void DericheIIRRenderSSE(XL_BITMAP_HANDLE hBitmap, double m_sigma)
+void DericheIIRRenderSSEIntrinsics(XL_BITMAP_HANDLE hBitmap, float m_sigma)
 {
 	SYSTEM_INFO sysInfo;
 	GetSystemInfo( &sysInfo );
@@ -457,71 +516,22 @@ void DericheIIRRenderSSE(XL_BITMAP_HANDLE hBitmap, double m_sigma)
 	assert(bmp.ColorType == XLGRAPHIC_CT_ARGB32);
 
 	float a0, a1, a2, a3, b1, b2, cprev, cnext;
-	calGaussianCoeff(m_sigma, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext);
+	CalGaussianCoeff(m_sigma, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext);
 
 	unsigned long *lpPixelBufferInitial = (unsigned long*)XL_GetBitmapBuffer(hBitmap, 0, 0);
 	unsigned long *lpRowInitial = (unsigned long*)XL_GetBitmapBuffer(hBitmap, 0, 1);
 
-	int bufferSizePerThread = (bmp.Width>bmp.Height?bmp.Width:bmp.Height)*4;
-	float *oTemp = new float[bufferSizePerThread*threadNum];
-	float *od = new float[bmp.Width*bmp.Height*4];
+	int bufferSizePerThread = (bmp.Width > bmp.Height ? bmp.Width : bmp.Height) * 4;
+	float *oTemp = new float[bufferSizePerThread * threadNum];
+	float *od = new float[bmp.Width * bmp.Height * 4];
 	
 #pragma omp parallel for 
 	for (int row = 0; row < bmp.Height; ++row)
 	{
 		int tidx = omp_get_thread_num();
-		unsigned long *lpRowInitial = lpPixelBufferInitial + bmp.ScanLineLength/4*row;
-		float *lpColumnInitial = od + row*4;
+		unsigned long *lpRowInitial = lpPixelBufferInitial + bmp.ScanLineLength / 4 * row;
+		float *lpColumnInitial = od + row * 4;
 		float *oTempThread = oTemp + bufferSizePerThread * tidx;
-		horizontal_sse_iir_line(oTempThread, lpRowInitial, lpColumnInitial, bmp.Width, bmp.Height, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext );
-	}
-
-#pragma omp parallel for
-	for (int col = 0; col < bmp.Width; ++col)
-	{
-		int tidx = omp_get_thread_num();
-		unsigned long *lpColInitial = lpPixelBufferInitial + col;
-
-		float *lpRowInitial = od+bmp.Height*col*4;
-		float *oTempThread = oTemp + bufferSizePerThread * tidx;
-		vertical_sse_iir_line(oTempThread, lpRowInitial, lpColInitial, bmp.ScanLineLength/4, bmp.Height, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext);
-	}
-
-	delete []oTemp;
-	delete []od;
-}
-
-void DericheIIRRenderSSEIntrinsics(XL_BITMAP_HANDLE hBitmap, double m_sigma)
-{
-	SYSTEM_INFO sysInfo;
-	GetSystemInfo( &sysInfo );
-	int nCPU = sysInfo.dwNumberOfProcessors;
-	int threadNum = nCPU;
-	omp_set_num_threads(threadNum);
-
-	XLBitmapInfo bmp;
-	XL_GetBitmapInfo(hBitmap, &bmp);
-
-	assert(bmp.ColorType == XLGRAPHIC_CT_ARGB32);
-
-	float a0, a1, a2, a3, b1, b2, cprev, cnext;
-	calGaussianCoeff(m_sigma, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext);
-
-	unsigned long *lpPixelBufferInitial = (unsigned long*)XL_GetBitmapBuffer(hBitmap, 0, 0);
-	unsigned long *lpRowInitial = (unsigned long*)XL_GetBitmapBuffer(hBitmap, 0, 1);
-
-	int bufferSizePerThread = (bmp.Width>bmp.Height?bmp.Width:bmp.Height)*4;
-	float *oTemp = new float[bufferSizePerThread*threadNum];
-	float *od = new float[bmp.Width*bmp.Height*4];
-	
-#pragma omp parallel for 
-	for (int row = 0; row < bmp.Height; ++row)
-	{
-		int tidx = omp_get_thread_num();
-		unsigned long *lpRowInitial = lpPixelBufferInitial + bmp.ScanLineLength/4*row;
-		float *lpColumnInitial = od + row*4;
-		float *oTempThread = oTemp + bufferSizePerThread * tidx;
-		//DerichIIRHorizontal(oTempThread, lpRowInitial, lpColumnInitial, bmp.Width, bmp.Height, bmp.Width, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext );
 		DerichIIRHorizontalSSEIntrinsics(oTempThread, lpRowInitial, lpColumnInitial, bmp.Width, bmp.Height, bmp.Width, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext );
 	}
 
@@ -543,10 +553,8 @@ void DericheIIRRenderSSEIntrinsics(XL_BITMAP_HANDLE hBitmap, double m_sigma)
 		01, 11
 		02, 12
 		*/
-		float *lpRowInitial = od+bmp.Height*col*4;
+		float *lpRowInitial = od+bmp.Height * col * 4;
 		float *oTempThread = oTemp + bufferSizePerThread * tidx;
-		//DerichIIRVertical(float *oTemp, float *id, unsigned long *od, int width, int height, float *a0, float *a1, float *a2, float *a3, float *b1, float *b2, float *cprev, float *cnext)
-		//DerichIIRVertical(oTempThread, lpRowInitial, lpColInitial, bmp.Height, bmp.ScanLineLength/4, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext);
 		DerichIIRVerticalSSEIntrinsics(oTempThread, lpRowInitial, lpColInitial, bmp.Height, bmp.ScanLineLength/4, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext);
 	}
 
@@ -554,7 +562,7 @@ void DericheIIRRenderSSEIntrinsics(XL_BITMAP_HANDLE hBitmap, double m_sigma)
 	delete []od;
 }
 
-void DericheIIRRender(XL_BITMAP_HANDLE hBitmap, double m_sigma)
+void DericheIIRRender(XL_BITMAP_HANDLE hBitmap, float m_sigma)
 {
 	XLBitmapInfo bmp;
 	XL_GetBitmapInfo(hBitmap, &bmp);
@@ -562,19 +570,19 @@ void DericheIIRRender(XL_BITMAP_HANDLE hBitmap, double m_sigma)
 	assert(bmp.ColorType == XLGRAPHIC_CT_ARGB32);
 
 	float a0, a1, a2, a3, b1, b2, cprev, cnext;
-	calGaussianCoeff(m_sigma, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext);
+	CalGaussianCoeff(m_sigma, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext);
 
 	unsigned long *lpPixelBufferInitial = (unsigned long*)XL_GetBitmapBuffer(hBitmap, 0, 0);
 	unsigned long *lpRowInitial = (unsigned long*)XL_GetBitmapBuffer(hBitmap, 0, 1);
 
-	int bufferSizePerThread = (bmp.Width>bmp.Height?bmp.Width:bmp.Height)*4;
+	int bufferSizePerThread = (bmp.Width > bmp.Height ? bmp.Width : bmp.Height) * 4;
 	float *oTemp = new float[bufferSizePerThread];
-	float *od = new float[bmp.Width*bmp.Height*4];
+	float *od = new float[bmp.Width * bmp.Height * 4];
 	
 	for (int row = 0; row < bmp.Height; ++row)
 	{
-		unsigned long *lpRowInitial = lpPixelBufferInitial + bmp.ScanLineLength/4*row;
-		float *lpColumnInitial = od + row*4;
+		unsigned long *lpRowInitial = lpPixelBufferInitial + bmp.ScanLineLength / 4 * row;
+		float *lpColumnInitial = od + row * 4;
 		DerichIIRHorizontal(oTemp, lpRowInitial, lpColumnInitial, bmp.Width, bmp.Height, bmp.Width, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext );
 	}
 
@@ -582,10 +590,11 @@ void DericheIIRRender(XL_BITMAP_HANDLE hBitmap, double m_sigma)
 	{
 		int tidx = omp_get_thread_num();
 		unsigned long *lpColInitial = lpPixelBufferInitial + col;
-		float *lpRowInitial = od+bmp.Height*col*4;
+		float *lpRowInitial = od + bmp.Height * col * 4;
 		DerichIIRVertical(oTemp, lpRowInitial, lpColInitial, bmp.Height, bmp.ScanLineLength/4, &a0, &a1, &a2, &a3, &b1, &b2, &cprev, &cnext);
 	}
 
 	delete []oTemp;
 	delete []od;
 }
+#endif

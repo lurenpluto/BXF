@@ -23,19 +23,19 @@ bool GaussianBlurObjectParser::ParserAttribute( GaussianBlurObject* lpObj, const
 
 	bool ret = true;
 	
-	if (strcmp(key, "Sigma") == 0)
+	if (strcmp(key, "sigma") == 0)
 	{
-		double sigma = LuaGaussianBlurObject::GetSigmaFromString(value);
+		float sigma = LuaGaussianBlurObject::GetSigmaFromString(value);
 		lpObj->SetSigma(sigma);
 	}
-	else if (strcmp(key, "Radius" )== 0)
+	else if (strcmp(key, "radius" )== 0)
 	{
 		int radius = atoi(value);
 		lpObj->SetRadius(radius);
 	}
-	else if(strcmp(key, "Type") == 0)
+	else if(strcmp(key, "gaussiantype") == 0)
 	{
-		lpObj->SetType(value);
+		lpObj->SetGaussianType(value);
 	}
 	else
 	{
