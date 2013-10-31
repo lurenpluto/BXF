@@ -103,10 +103,20 @@ void OneDimentionRenderMMX(XL_BITMAP_HANDLE hBitmap, const float &i_sigma, int i
 	short *weightBufferInitial = NULL;
 	short *weightInt = NULL;
 	short *weights = NULL;
+	// 对半径做矫正, 因为要右移8位丢失精度, 所以半径大于128的像素是么有意义的
 	if (i_radius > 128)
 	{
 		i_radius = 128;
 	}
+	if (i_radius > bmp.Width / 2 - 1)
+	{
+		i_radius = bmp.Width / 2 - 1;
+	}
+	if (i_radius > bmp.Height / 2 - 1)
+	{
+		i_radius = bmp.Height / 2 - 1;
+	}
+
 	// TODO: 这里改一改, 太难看了. 
 	int radius = i_radius;
 	GaussianFunctionInteger(i_sigma, radius, &weightBufferInitial, 8);
@@ -142,7 +152,6 @@ void OneDimentionRenderMMX(XL_BITMAP_HANDLE hBitmap, const float &i_sigma, int i
 	{
 		lpPixelBufferLine = lpPixelBufferTempInitial + column * bmp.Height; // 线头
 		lpPixelBufferDest = lpPixelBufferDestEnd + column; // 线尾
-		// 没有考虑半径大于等于高度一半时怎么做. 
 		Vertical_mmx_fir_line(radius, bmp.ScanLineLength, bmp.Height, weightInt, lpPixelBufferDest, lpPixelBufferLine);
 	}
 	delete []weightBufferInitial;
