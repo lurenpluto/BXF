@@ -65,6 +65,10 @@ private:
 	static int GetFocusedFrame(lua_State* luaState);
 	static int GetFrame(lua_State* luaState); 
 
+	static int RegisterLuaFunction(lua_State* luaState);
+    static int RemoveLuaFunction(lua_State* luaState);
+	static int CallJavascriptFunction(lua_State* luaState);
+	static int SendMessage(lua_State* luaState);
 protected:
 
 	static const XLLRTGlobalAPI s_szLuaMemberFuncs[];

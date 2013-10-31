@@ -15,7 +15,18 @@ function OnClose(self)
 end
 
 function OnCreate(self)
-
+	local objTree = self:GetBindUIObjectTree()
+	local browser = objTree:GetUIObject("browser")
+	browser:RegisterLuaFunction("testfunc",function(args)
+		local format = "-result-\ncity:%s\nstreet:%s\npostcode:%s"
+		local info = 
+			string.format(format,
+				args['city'],
+				args['street'],
+				args['postcode'])
+		XLMessageBox(info)
+		return {["result"]="bolt"}
+	end)
 end
 
 function OnLoadingStateChange(self, isLoading, canGoBack, anGoForward)
@@ -23,9 +34,7 @@ function OnLoadingStateChange(self, isLoading, canGoBack, anGoForward)
 end
 
 function OnBeforeNavigation(self, frame, url, navigation_type, is_redirect)
-
 	return 0, false, true, true
-	
 end
 
 function OnBeforePopup(self, frame, targetUrl, targetFrameName)
@@ -34,8 +43,18 @@ function OnBeforePopup(self, frame, targetUrl, targetFrameName)
 end
 
 function OnJavaScriptMessageReceived(self,messageName,args)
-	XLMessageBox(messageName)
-	XLMessageBox(args['city']['date'])
+	local format = "message:%s\ncity:%s\nstreet:%s\npostcode:%s"
+	local info = 
+		string.format(format,
+			messageName,
+			args['city'],
+			args['street'],
+			args['postcode'])
+	XLMessageBox(info)
+
+	self:CallJavascriptFunction('alert',{["name"]="bolt"},function(ret)
+		XLMessageBox(ret['name'])
+	end)
 end
 
 function GetFileAbsPath(relativePath)
@@ -43,3 +62,26 @@ function GetFileAbsPath(relativePath)
      local root = string.sub(__document, 1, pos2);
      return root..relativePath
 end
+
+function CallJavascriptButton_MouseLeftDown(self)
+	local objTree = self:GetOwner()
+	local browser = objTree:GetUIObject("browser")
+	browser:CallJavascriptFunction('alert',{["name"]="bolt"},function(ret)
+		XLMessageBox(ret['name'])
+	end)
+end
+
+function SendLuaMessage2JavascriptButton_MouseLeftDown(self)
+	local objTree = self:GetOwner()
+	local browser = objTree:GetUIObject("browser")
+	browser:SendMessage('lua_message',{["name"]="bolt message"})
+end
+
+
+
+
+
+
+
+
+

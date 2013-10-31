@@ -5,6 +5,7 @@
 ********************************************************************/ 
 #include "stdafx.h"
 #include "./WebKernelLuaHelper.h"
+#include "../WebKernel/DBG.h"
 
 void WebKernelLuaHelper::PushCefString(lua_State* luaState, const CefString& value)
 {
@@ -180,10 +181,15 @@ CefRefPtr<CefDictionaryValue> WebKernelLuaHelper::ToCefDictionaryValue(lua_State
 
 	// table is in the stack at index
 	lua_pushnil(luaState);  /* first key */
+	if (index<0) 
+	{
+		index = index-1;
+	}
 	while (lua_next(luaState, index) != 0) 
 	{
 		// uses 'key' (at index -2) and 'value' (at index -1) 
 		CefString key = ToCefString(luaState,-2);
+		
 		if(lua_isboolean(luaState,-1))
 		{
 			dictionaryValue->SetBool(key,!!lua_toboolean(luaState,-1));
@@ -208,7 +214,6 @@ CefRefPtr<CefDictionaryValue> WebKernelLuaHelper::ToCefDictionaryValue(lua_State
 		{
 			dictionaryValue->SetNull(key);
 		}
-
 		// removes 'value'; keeps 'key' for next iteration
 		lua_pop(luaState, 1);
 	}

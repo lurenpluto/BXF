@@ -58,8 +58,24 @@ public:
 	virtual void OnBeforePopup(CefRefPtr<CefFrame> frame, const CefString& targetUrl
 		, const CefString& targetFrameName, bool& handled) = 0;
 
+public:
+	/**
+	 *	Received Javascript message
+	 */
 	virtual void OnJavaScriptMessageReceived(const CefString messageName
 		, CefRefPtr<CefDictionaryValue> dictionaryValue, bool& handled) = 0;
+
+	/**
+	 *	Received Javascript call message
+	 */
+	virtual CefRefPtr<CefDictionaryValue> OnJavascriptCallMessageReceived(std::wstring functionName
+		, CefRefPtr<CefDictionaryValue> dictionaryValue,bool& handled)=0;
+
+	/**
+	 *	Received Lua callback message
+	 */
+	virtual void OnLuaCallbackMessageRecevied( CefString luaFunctionName, 
+		CefRefPtr<CefDictionaryValue> dictionaryValue, bool& handled )=0;
 };
 
 class BaseBoltBrowser
@@ -103,8 +119,6 @@ public:
 	virtual void OnBeforePopup(CefRefPtr<CefFrame> frame, const CefString& targetUrl
 		, const CefString& targetFrameName, bool& handled);
 
-	virtual void OnJavaScriptMessageReceived(const CefString messageName,CefRefPtr<CefDictionaryValue> dictionaryValue, bool& handled);
-
 public:
 
 	// browser的控制方法
@@ -127,6 +141,23 @@ public:
 	CefRefPtr<CefFrame> GetFocusedFrame();
 	CefRefPtr<CefFrame> GetFrame(const wchar_t* name); 
 
+
+public:
+	/**
+	 *	Call Javascript function from Lua.
+	 */
+	bool CallJavascriptFunction( const CefString& functionName, CefRefPtr<CefDictionaryValue> dictionaryValue );
+	
+	/**
+	 *	Send Lua message to Javascript.
+	 */
+	bool SendMessageToJavascript( const CefString& messageName, CefRefPtr<CefDictionaryValue> dictionaryValue );
+
+public:
+	virtual void OnJavaScriptMessageReceived(const CefString messageName,CefRefPtr<CefDictionaryValue> dictionaryValue, bool& handled);
+	virtual CefRefPtr<CefDictionaryValue> OnJavascriptCallMessageRecivied( CefString luaFunctionName, CefRefPtr<CefDictionaryValue> dictionaryValue,bool& handled);
+	virtual void OnLuaCallbackMessageRecevied( CefString luaFunctionName, CefRefPtr<CefDictionaryValue> dictionaryValue, bool& handled );
+
 protected:
 
 	// 子类可以重写的虚方法
@@ -142,13 +173,14 @@ private:
 	bool UninitClient();
 
 private:
-
 	void SetStatus(BrowserStatus newStatus);
 
 	// 生命周期相关方法，由lifespan负责通知
 	void NotifyOnAfterCreated(CefBrowser* lpBrowser);
 	bool NotifyDoClose();
 	void NotifyOnBeforeClose();
+	
+
 
 protected:
 

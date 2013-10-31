@@ -26,6 +26,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine="&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -3470,14 +3471,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\WebKernel\WebKernelConvertor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\WebKernel\WebKernelConvertor.h"
-				>
-			</File>
-			<File
 				RelativePath=".\WebKernel\WebKernelDisplayHandler.cpp"
 				>
 			</File>
@@ -3542,14 +3535,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\WebKernel\WebKernelV8Handler.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\WebKernel\WebKernelV8Handler.h"
-				>
-			</File>
-			<File
 				RelativePath=".\WebKernel\WebKernelWindowlessRender.cpp"
 				>
 			</File>
@@ -3573,6 +3558,42 @@
 				RelativePath=".\WebKernel\WindowlessBoltBrowser.h"
 				>
 			</File>
+			<Filter
+				Name="ScriptIPC"
+				>
+				<File
+					RelativePath=".\WebKernel\WebKernelConvertor.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\WebKernel\WebKernelConvertor.h"
+					>
+				</File>
+				<File
+					RelativePath=".\WebKernel\WebKernelJavascriptHandler.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\WebKernel\WebKernelJavascriptHanlder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\WebKernel\WebKernelScriptIPCMessage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\WebKernel\WebKernelScriptIPCMessage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\WebKernel\WebKernelV8Handler.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\WebKernel\WebKernelV8Handler.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="BrowserObject"
@@ -3667,6 +3688,14 @@
 			</File>
 			<File
 				RelativePath=".\BrowserObjectLuaHost\LuaFrame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BrowserObjectLuaHost\LuaJavascriptFunctor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\BrowserObjectLuaHost\LuaJavascriptFunctor.h"
 				>
 			</File>
 			<File

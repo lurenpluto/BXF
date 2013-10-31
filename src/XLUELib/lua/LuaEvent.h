@@ -35,6 +35,8 @@ public:
 	}
 
     BaseLuaListener(const BaseLuaListener& other)
+		:m_luaState(NULL),
+		m_luaFunRef(LUA_NOREF)
 	{
 		Copy(other);
 	}
@@ -46,7 +48,7 @@ public:
 		return *this;
 	}
 
-    virtual ~BaseLuaListener()
+	virtual ~BaseLuaListener()
 	{
 		Clear();
 	}
@@ -71,7 +73,7 @@ public:
 
 	void Clear()
 	{
-		assert(m_luaState);
+		//assert(m_luaState);
 		if (m_luaState != NULL)
 		{
 			assert(m_luaFunRef != LUA_NOREF);

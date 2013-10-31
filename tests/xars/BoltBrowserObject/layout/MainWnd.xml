@@ -19,11 +19,10 @@
 				<attr>
 					<width>father.width</width>
 					<height>father.height</height>
-					<zorder>-1000</zorder>
+					<zorder>1000</zorder>
 				</attr>
 			</obj>
 			
-
 			<obj id="browser" class="BoltBrowserObject">
 				<attr>
 					<width>father.width</width>
@@ -43,12 +42,92 @@
 				<attr>
 					<width>father.width</width>
 					<top>father.height / 2</top>
-					<height>father.height / 2</height>
+					<height>father.height/2-50</height>
 					<alpha>150</alpha>
 				</attr>
 				<eventlist>
 				</eventlist>
 			</obj>
+
+			<obj id="boltuibkg" class="FillObject">
+				<attr>
+					<width>father.width</width>
+					<top>father.height-50</top>
+					<height>50</height>
+					<filltype>Monochrome</filltype>
+					<blendtype>Source</blendtype>
+					<destcolor>0,0,0,255</destcolor>
+					<srccolor>0,0,0,255</srccolor>
+					<srcpt>0,0</srcpt>
+					<destpt>width,height</destpt>
+				</attr>
+			</obj>
+			<obj id="boltui" class="LayoutObject">
+				<attr>
+					<width>father.width</width>
+					<top>father.height-50</top>
+					<height>50</height>
+				</attr>
+				<children>
+					<obj id="calljavascriptfunction" class="FillObject">
+						<attr>
+							<left>20</left>
+							<top>10</top>
+							<width>200</width>
+							<height>father.height-20</height>
+							<filltype>Monochrome</filltype>
+							<blendtype>Source</blendtype>
+							<destcolor>255,255,255,255</destcolor>
+							<srccolor>255,255,255,255</srccolor>
+							<srcpt>0,0</srcpt>
+							<destpt>0,height</destpt>
+						</attr>
+						<children>
+							<obj id="text.calljs" class="TextObject">
+								<attr>
+									<width>father.width</width>
+									<height>father.height</height>
+									<text>CallJavascriptFunction</text>
+									<valign>center</valign>
+									<halign>center</halign>
+								</attr>
+								<eventlist>
+									<event name="OnLButtonDown" file="MainWnd.xml.lua" func="CallJavascriptButton_MouseLeftDown"/>
+								</eventlist>
+							</obj>
+						</children>
+					</obj>
+					<obj id="sendmessage2javascript" class="FillObject">
+						<attr>
+							<left>20+220</left>
+							<top>10</top>
+							<width>200</width>
+							<height>father.height-20</height>
+							<filltype>Monochrome</filltype>
+							<blendtype>Source</blendtype>
+							<destcolor>255,255,255,255</destcolor>
+							<srccolor>255,255,255,255</srccolor>
+							<srcpt>0,0</srcpt>
+							<destpt>0,height</destpt>
+						</attr>
+						<children>
+							<obj id="text.sendmessage" class="TextObject">
+								<attr>
+									<width>father.width</width>
+									<height>father.height</height>
+									<text>Send Message 2 Javasctipt</text>
+									<valign>center</valign>
+									<halign>center</halign>
+								</attr>
+								<eventlist>
+									<event name="OnLButtonDown" file="MainWnd.xml.lua" func="SendLuaMessage2JavascriptButton_MouseLeftDown"/>
+								</eventlist>
+							</obj>
+						</children>
+					</obj>
+				</children>
+			</obj>
+
 			
 		</children>
 	</obj>

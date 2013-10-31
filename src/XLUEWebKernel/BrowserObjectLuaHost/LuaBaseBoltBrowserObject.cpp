@@ -5,7 +5,9 @@
 ********************************************************************/ 
 #include "stdafx.h"
 #include "./LuaBaseBoltBrowserObject.h"
+#include "./LuaJavascriptFunctor.h"
 #include "./LuaFrame.h"
+#include "../WebKernel/DBG.h"
 
 LuaBaseBoltBrowserObject::LuaBaseBoltBrowserObject(void)
 {
@@ -34,6 +36,11 @@ const XLLRTGlobalAPI LuaBaseBoltBrowserObject::s_szLuaMemberFuncs[] =
 	{"GetMainFrame", GetMainFrame},
 	{"GetFocusedFrame", GetFocusedFrame},
 	{"GetFrame", GetFrame},
+
+	{"SendMessage",SendMessage},                         //发送消息给Javascript环境
+	{"CallJavascriptFunction",CallJavascriptFunction},   //调用Javascript函数
+	{"RegisterLuaFunction", RegisterLuaFunction},        //注册Lua函数，供Javascript环境调用
+	{"RemoveLuaFunction", RemoveLuaFunction},            //删除注册的Lua函数
 
 	{NULL, NULL},
 };
@@ -279,3 +286,104 @@ int LuaBaseBoltBrowserObject::GetFrame( lua_State* luaState )
 	return 1;
 }
 
+int LuaBaseBoltBrowserObject::RegisterLuaFunction(lua_State* luaState)
+{
+	//获取浏览器对象
+	BaseBoltBrowserObject* lpObj = CheckExtObject(luaState, 1);
+	if (lpObj != NULL)
+	{
+		////获取注册的函数名字
+		std::wstring functionName;
+		LuaHelper::GetUnicodeValue(luaState, 2, functionName);
+
+		//获取注册的函数
+		if(!lua_isfunction(luaState,3))
+		{
+			return 0;
+		}
+
+		long functionRef = luaL_ref(luaState,LUA_REGISTRYINDEX);
+		LuaJavascriptFunctor functor(functionName,luaState,functionRef);
+		lpObj->RegisterLuaFunction(functionName,functor);
+		return 0;
+	}
+
+	return 0;
+}
+
+int LuaBaseBoltBrowserObject::RemoveLuaFunction(lua_State* luaState)
+{
+	// 获取浏览器对象
+	BaseBoltBrowserObject* lpObj = CheckExtObject(luaState, 1);
+	if (lpObj == NULL)
+	{
+		return 0;
+	}
+
+	// 获取函数名字
+	std::wstring functionName;
+	LuaHelper::GetUnicodeValue(luaState,2,functionName);
+	
+	bool success = lpObj->RemoveLuaFunction(functionName);
+	lua_pushboolean(luaState,success);
+
+	return 1;
+}
+
+int  LuaBaseBoltBrowserObject::CallJavascriptFunction(lua_State* luaState)
+{
+	// get browser
+	BaseBoltBrowserObject* lpObj = CheckExtObject(luaState,1);
+	if (lpObj == NULL)
+	{
+		return 0;
+	}
+
+	// get Lua function Name
+	CefString functionName = WebKernelLuaHelper::ToCefString(luaState,2);
+	
+	// get Lua function arguments
+	CefRefPtr<CefDictionaryValue> dictionaryValue = WebKernelLuaHelper::ToCefDictionaryValue(luaState,3);
+
+	// check Lua function
+	if(!lua_isfunction(luaState,4))
+	{
+		return 0;
+	}
+
+	// get Lua function
+	// TODO: push function to stack top
+	lua_pushvalue(luaState,4);
+	long functionRef = luaL_ref(luaState,LUA_REGISTRYINDEX);
+	LuaJavascriptCallbackFunctor functor(functionName,luaState,functionRef);
+
+	// call Javascript function
+	bool ret = lpObj->CallJavascriptFunction(functionName,dictionaryValue,functor);
+
+	// push result
+	lua_pushboolean(luaState,ret);
+
+	return 1;
+}
+
+int LuaBaseBoltBrowserObject::SendMessage( lua_State* luaState )
+{
+	// 获取浏览器对象
+	BaseBoltBrowserObject* lpObj = CheckExtObject(luaState,1);
+	if (lpObj == NULL)
+	{
+		return 0;
+	}
+
+	// 获取函数名
+	CefString messageName = WebKernelLuaHelper::ToCefString(luaState,2);
+
+	// 获取函数参数
+	CefRefPtr<CefDictionaryValue> dictionaryValue = WebKernelLuaHelper::ToCefDictionaryValue(luaState,3);
+
+	bool ret = lpObj->SendMessageToJavascript(messageName,dictionaryValue);
+
+	lua_pushboolean(luaState,ret);
+
+	return 1;
+}

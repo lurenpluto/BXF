@@ -11,20 +11,38 @@
 * =                                                                 =
 * =-----------------------------------------------------------------=
 * 
-*   FileName    :   DBG.h
+*   FileName    :   LuaBaseFunctor
 *   Author      :   ·¶·ÉÁú
-*   Create      :   2013-10-25
-*   LastChange  :   2013-10-25
+*   Create      :   2013-10-28 
+*   LastChange  :   2013-10-28
 *   History     :	
 *
-*   Description :   µ÷ÊÔ¸¨Öúº¯Êý
+*   Description :   Lua×¢²á¸øJavascriptµÄº¯Êý
 *
 ********************************************************************/ 
-#ifndef __DBG_H__
-#define __DBG_H__
+#ifndef __LUAJAVASCRIPTFUNCTOR_H__
+#define __LUAJAVASCRIPTFUNCTOR_H__
 
-void DBG(const wchar_t* message);
-void DBG(const std::wstring& message);
-void DBG(const CefString& message);
+#include "./LuaBaseFunctor.h"
 
-#endif //__DBG_H__
+class LuaJavascriptFunctor:public BaseLuaListener
+{
+public:
+	LuaJavascriptFunctor(std::wstring functionName,lua_State* luaState,long luaRef);
+	CefRefPtr<CefDictionaryValue> operator()(CefRefPtr<CefDictionaryValue> dictionaryValue);
+	
+private:
+	std::wstring m_functionName;
+};
+
+class LuaJavascriptCallbackFunctor:public BaseLuaListener
+{
+public:
+	LuaJavascriptCallbackFunctor(std::wstring functionName,lua_State* luaState,long luaRef);
+	bool operator()(CefRefPtr<CefDictionaryValue> dictionaryValue);
+
+private:
+	std::wstring m_functionName;
+};
+
+#endif //__LUAJAVASCRIPTFUNCTOR_H__

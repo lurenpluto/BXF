@@ -100,7 +100,6 @@ private:
 	
 	// 事件回调函数列表
 	typedef bool (WebKernelSyncProxy::*LPFNONPROCESSMESSAGE)(CefRefPtr<CefBrowser>, CefRefPtr<CefProcessMessage>);
-
 	typedef stdext::hash_map<std::wstring, LPFNONPROCESSMESSAGE> messageMap;
 	messageMap m_messageMap;
 

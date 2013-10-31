@@ -121,28 +121,8 @@ void WebKernelRenderProcessHandler::OnRenderThreadCreated( CefRefPtr<CefListValu
 
 void WebKernelRenderProcessHandler::OnWebKitInitialized()
 {
-	std::string app_code =
-		"var app;"
-		"if (!app)"
-		"  app = {};"
-		"(function() {"
-		"  app.sendMessage = function(name, arguments) {"
-		"    native function sendMessage();"
-		"    return sendMessage(name, arguments);"
-		"  };"
-		"  app.setMessageCallback = function(name, callback) {"
-		"    native function setMessageCallback();"
-		"    return setMessageCallback(name, callback);"
-		"  };"
-		"  app.removeMessageCallback = function(name) {"
-		"    native function removeMessageCallback();"
-		"    return removeMessageCallback(name);"
-		"  };"
-		"})();";
-
-	CefRegisterExtension("v8/app", app_code,
-		new WebKernelV8Handler(this));
-
+	m_v8Handler = new WebKernelV8Handler(this);
+	m_v8Handler->OnWebKitInitialized();
 }
 
 void WebKernelRenderProcessHandler::OnBrowserCreated( CefRefPtr<CefBrowser> browser )
@@ -155,115 +135,56 @@ void WebKernelRenderProcessHandler::OnBrowserDestroyed( CefRefPtr<CefBrowser> br
 
 }
 
-bool WebKernelRenderProcessHandler::OnBeforeNavigation( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, 
-													   CefRefPtr<CefRequest> request, NavigationType navigation_type, bool is_redirect )
+bool WebKernelRenderProcessHandler::OnBeforeNavigation( 
+	CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame
+	, CefRefPtr<CefRequest> request, NavigationType navigation_type, bool is_redirect )
 {
 	return g_webKernelGlobal.m_syncProxy.OnBeforeNavigation(browser, frame, request, navigation_type, is_redirect);
 }
 
-void WebKernelRenderProcessHandler::OnContextCreated( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, 
-													 CefRefPtr<CefV8Context> context )
+void WebKernelRenderProcessHandler::OnContextCreated( 
+	CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame
+	, CefRefPtr<CefV8Context> context )
 {
 	
 }
 
-void WebKernelRenderProcessHandler::OnContextReleased( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, 
-													  CefRefPtr<CefV8Context> context )
+void WebKernelRenderProcessHandler::OnContextReleased( 
+	CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame
+	, CefRefPtr<CefV8Context> context )
 {
 
 }
 
-void WebKernelRenderProcessHandler::OnUncaughtException( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, 
-														CefRefPtr<CefV8Context> context, CefRefPtr<CefV8Exception> exception, 
-														CefRefPtr<CefV8StackTrace> stackTrace )
+void WebKernelRenderProcessHandler::OnUncaughtException( 
+	CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame
+	, CefRefPtr<CefV8Context> context, CefRefPtr<CefV8Exception> exception
+	, CefRefPtr<CefV8StackTrace> stackTrace )
 {
 
 }
 
-void WebKernelRenderProcessHandler::OnFocusedNodeChanged( CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, 
-														 CefRefPtr<CefDOMNode> node )
+void WebKernelRenderProcessHandler::OnFocusedNodeChanged( 
+	CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame
+	, CefRefPtr<CefDOMNode> node )
 {
 	g_webKernelGlobal.m_syncProxy.OnFocusedNodeChanged(browser, frame, node);
 }
 
-bool WebKernelRenderProcessHandler::OnProcessMessageReceived( CefRefPtr<CefBrowser> browser, CefProcessId source_process, 
-															 CefRefPtr<CefProcessMessage> message )
+bool WebKernelRenderProcessHandler::OnProcessMessageReceived( 
+	CefRefPtr<CefBrowser> browser, CefProcessId source_process
+	, CefRefPtr<CefProcessMessage> message )
 {
+	if(m_v8Handler->OnProcessMessageReceived(browser,source_process,message))
+	{
+		return true;
+	}
+
 	if(g_webKernelGlobal.m_syncProxy.OnProcessMessageReceived(browser,message))
 	{
 		return true;
 	}
 
-	bool handled = false;
-	// Execute the registered JavaScript callback if any.
-	if (!callback_map_.empty()) 
-	{
-		CefString message_name = message->GetName();
-		CallbackMap::const_iterator it = callback_map_.find(
-			std::make_pair(message_name.ToString(),
-			browser->GetIdentifier()));
-
-		if (it != callback_map_.end()) 
-		{
-			// Keep a local reference to the objects. The callback may remove itself
-			// from the callback map.
-			CefRefPtr<CefV8Context> context = it->second.first;
-			CefRefPtr<CefV8Value> callback = it->second.second;
-
-			// Enter the context.
-			context->Enter();
-
-			CefV8ValueList arguments;
-
-			// First argument is the message name.
-			arguments.push_back(CefV8Value::CreateString(message_name));
-
-			// Second argument is the list of message arguments.
-			CefRefPtr<CefListValue> list = message->GetArgumentList();
-			CefRefPtr<CefV8Value> args = CefV8Value::CreateArray(static_cast<int>(list->GetSize()));
-			WebKernelConvertor::CefListValue2V8Array(list, args);
-			arguments.push_back(args);
-
-			// Execute the callback.
-			CefRefPtr<CefV8Value> retval = callback->ExecuteFunction(NULL, arguments);
-			if (retval.get()) {
-				if (retval->IsBool())
-					handled = retval->GetBoolValue();
-			}
-
-			// Exit the context.
-			context->Exit();
-		}
-	}
-
-	return handled;
-}
-
-void WebKernelRenderProcessHandler::SetMessageCallback(
-	const std::string& message_name,
-	int browser_id,
-	CefRefPtr<CefV8Context> context,
-	CefRefPtr<CefV8Value> function) 
-{
-	assert(CefCurrentlyOn(TID_RENDERER));
-
-	callback_map_.insert(
-	std::make_pair(std::make_pair(message_name, browser_id),
-	std::make_pair(context, function)));
-}
-
-bool WebKernelRenderProcessHandler::RemoveMessageCallback(
-	const std::string& message_name,
-	int browser_id) 
-{
-	assert(CefCurrentlyOn(TID_RENDERER));
-
-	CallbackMap::iterator it =
-	  callback_map_.find(std::make_pair(message_name, browser_id));
-	if (it != callback_map_.end()) {
-	  callback_map_.erase(it);
-	  return true;
-	}
-
 	return false;
 }
+

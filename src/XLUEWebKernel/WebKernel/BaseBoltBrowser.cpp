@@ -472,3 +472,50 @@ void BaseBoltBrowser::OnJavaScriptMessageReceived(const CefString messageName, C
 	assert(m_lpEvents);
 	m_lpEvents->OnJavaScriptMessageReceived(messageName,dictionaryValue,handled);
 }
+
+CefRefPtr<CefDictionaryValue> BaseBoltBrowser::OnJavascriptCallMessageRecivied( CefString luaFunctionName, CefRefPtr<CefDictionaryValue> dictionaryValue,bool& handled)
+{
+	assert(m_lpEvents);
+	return m_lpEvents->OnJavascriptCallMessageReceived(luaFunctionName.ToWString(),dictionaryValue,handled);
+}
+
+void BaseBoltBrowser::OnLuaCallbackMessageRecevied( CefString luaFunctionName, CefRefPtr<CefDictionaryValue> dictionaryValue, bool& handled )
+{
+	assert(m_lpEvents);
+
+	m_lpEvents->OnLuaCallbackMessageRecevied(luaFunctionName,dictionaryValue,handled);
+}
+
+bool BaseBoltBrowser::CallJavascriptFunction( const CefString& functionName, CefRefPtr<CefDictionaryValue> dictionaryValue )
+{
+	assert(m_browser);
+	if (m_browser == NULL)
+	{
+		return NULL;
+	}
+
+	assert(m_client);
+	if (m_client == NULL)
+	{
+		return NULL;
+	}
+
+	return m_client->GetJavascriptHandler()->CallJavascriptFunction(m_browser,functionName,dictionaryValue);
+}
+
+bool BaseBoltBrowser::SendMessageToJavascript( const CefString& messageName, CefRefPtr<CefDictionaryValue> dictionaryValue )
+{
+	assert(m_browser);
+	if (m_browser == NULL)
+	{
+		return NULL;
+	}
+
+	assert(m_client);
+	if (m_client == NULL)
+	{
+		return NULL;
+	}
+
+	return m_client->GetJavascriptHandler()->SendMessageToJavascript(m_browser,messageName,dictionaryValue);
+}

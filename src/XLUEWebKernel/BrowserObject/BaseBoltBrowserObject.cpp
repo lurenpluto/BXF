@@ -5,6 +5,9 @@
 ********************************************************************/ 
 #include "stdafx.h"
 #include "./BaseBoltBrowserObject.h"
+#include "../BrowserObjectLuaHost/LuaJavascriptFunctor.h"
+#include "../WebKernel/DBG.h"
+#include "../WebKernel/WebKernelScriptIPCMessage.h"
 
 BaseBoltBrowserObject::BaseBoltBrowserObject(void)
 :m_lpBaseBrowser(NULL),
@@ -215,6 +218,42 @@ bool BaseBoltBrowserObject::GetPopupInplace()
 	return m_lpBaseBrowser->GetPopupInplace();
 }
 
+void BaseBoltBrowserObject::RegisterLuaFunction(std::wstring functionName,LuaJavascriptFunctor functor)
+{
+	m_luaFunctorMap.insert(std::pair<std::wstring,LuaJavascriptFunctor>(functionName,functor));
+}
+
+bool BaseBoltBrowserObject::RemoveLuaFunction(std::wstring functionName)
+{
+	JavascriptFunctorMap::iterator it = m_luaFunctorMap.find(functionName);
+	if (it != m_luaFunctorMap.end()) 
+	{
+		m_luaFunctorMap.erase(it);
+		return true;
+	}
+
+	return false;
+}
+
+void BaseBoltBrowserObject::RegisterLuaCallbackFunctor(std::wstring functionName,LuaJavascriptCallbackFunctor functor)
+{
+	m_luaCallbackFunctorMap.insert(std::pair<std::wstring,LuaJavascriptCallbackFunctor>(functionName,functor));
+}
+
+bool BaseBoltBrowserObject::RemoveLuaCallbackFunction(std::wstring functionName)
+{
+	JavascriptCallbackFunctorMap::iterator it = m_luaCallbackFunctorMap.find(functionName);
+	if (it != m_luaCallbackFunctorMap.end()) 
+	{
+		m_luaCallbackFunctorMap.erase(it);
+		return true;
+	}
+
+	return false;
+}
+
+
+
 void BaseBoltBrowserObject::OnAfterCreated(bool& handled)
 {
 	assert(m_lpBaseBrowserObjectEvents);
@@ -303,9 +342,62 @@ void BaseBoltBrowserObject::OnBeforePopup( CefRefPtr<CefFrame> frame, const CefS
 	m_lpBaseBrowserObjectEvents->OnBeforePopup(frame, targetUrl, targetFrameName, handled);
 }
 
+bool BaseBoltBrowserObject::CallJavascriptFunction( const CefString& functionName, CefRefPtr<CefDictionaryValue> dictionaryValue, LuaJavascriptCallbackFunctor functor)
+{
+	assert(m_lpBaseBrowser);
+	if (m_lpBaseBrowser == NULL)
+	{
+		return NULL;
+	}
+
+	std::wstring wrapJavascriptFunctionName = WebKernelScriptIPCMessage::WrapLuaCallName(functionName);
+	RegisterLuaCallbackFunctor(wrapJavascriptFunctionName,functor);
+
+	return m_lpBaseBrowser->CallJavascriptFunction(wrapJavascriptFunctionName,dictionaryValue);
+}
+
+bool BaseBoltBrowserObject::SendMessageToJavascript( const CefString& messageName, CefRefPtr<CefDictionaryValue> dictionaryValue )
+{
+	assert(m_lpBaseBrowser);
+	if (m_lpBaseBrowser == NULL)
+	{
+		return NULL;
+	}
+
+	return m_lpBaseBrowser->SendMessageToJavascript(messageName,dictionaryValue);
+}
+
 void BaseBoltBrowserObject::OnJavaScriptMessageReceived(const CefString messageName, CefRefPtr<CefDictionaryValue> dictionaryValue,bool& handled)
 {
 	assert(m_lpBaseBrowserObjectEvents);
 
 	m_lpBaseBrowserObjectEvents->OnJavaScriptMessageReceived(messageName,dictionaryValue, handled);
 }
+
+CefRefPtr<CefDictionaryValue> BaseBoltBrowserObject::OnJavascriptCallMessageReceived(std::wstring functionName,CefRefPtr<CefDictionaryValue> dictionaryValue,bool& handled)
+{
+	handled = false;
+	JavascriptFunctorMap::iterator it = m_luaFunctorMap.find(functionName);
+	if (it != m_luaFunctorMap.end()) 
+	{
+		LuaJavascriptFunctor functor = it->second;
+		CefRefPtr<CefDictionaryValue> result = functor(dictionaryValue);
+		handled = true;
+		return result;
+	}
+	return CefDictionaryValue::Create();
+}
+
+void BaseBoltBrowserObject::OnLuaCallbackMessageRecevied(CefString luaFunctionName,  CefRefPtr<CefDictionaryValue> dictionaryValue, bool& handled )
+{
+	handled = false;
+	JavascriptCallbackFunctorMap::iterator it = m_luaCallbackFunctorMap.find(luaFunctionName);
+	if (it != m_luaCallbackFunctorMap.end()) 
+	{
+		LuaJavascriptCallbackFunctor functor = it->second;
+		handled = functor(dictionaryValue);
+
+		RemoveLuaCallbackFunction(luaFunctionName.ToWString());
+	}
+}
+

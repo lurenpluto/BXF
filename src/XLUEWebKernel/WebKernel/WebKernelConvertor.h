@@ -19,7 +19,7 @@
 *
 *   Description :   CefV8Value和CefListValue、CefDictionaryValue相互转化辅助类
 *
-********************************************************************/ 
+********************************************************************/
 #ifndef __WEBKERNELCONVERTOR_H__
 #define __WEBKERNELCONVERTOR_H__
 	

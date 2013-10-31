@@ -23,6 +23,8 @@
 #ifndef __WEBKERNELCLIENT_H__
 #define __WEBKERNELCLIENT_H__
 
+#include "./WebKernelJavascriptHanlder.h"
+
 class WebKernelClient
 	: public CefClient
 {
@@ -60,6 +62,10 @@ private:
 	virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process,
 		CefRefPtr<CefProcessMessage> message);
 
+public:
+	virtual CefRefPtr<WebKernelJavascriptHandler> GetJavascriptHandler();
+
+
 	IMPLEMENT_REFCOUNTING(WebKernelClient)
 
 private:
@@ -69,6 +75,8 @@ private:
 	CefRefPtr<CefDisplayHandler> m_displayHandler;
 
 	CefRefPtr<CefRenderHandler> m_renderHandler;
+
+	CefRefPtr<WebKernelJavascriptHandler> m_javascriptHandler;
 };
 
 #endif // __WEBKERNELCLIENT_H__

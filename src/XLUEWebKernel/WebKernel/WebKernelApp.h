@@ -23,6 +23,8 @@
 #ifndef __WEBKERNELAPP_H__
 #define __WEBKERNELAPP_H__
 
+#include "./WebKernelV8Handler.h"
+
 class WebKernelBrowserProcessHandler;
 class WebKernelRenderProcessHandler;
 
@@ -117,11 +119,7 @@ public:
 		int browser_id);
 
 private:
-	// Map of message callbacks.
-	typedef std::map<std::pair<std::string, int>,
-		std::pair<CefRefPtr<CefV8Context>, CefRefPtr<CefV8Value> > >
-		CallbackMap;
-	CallbackMap callback_map_;
+	CefRefPtr<WebKernelV8Handler> m_v8Handler;
 
 
 	IMPLEMENT_REFCOUNTING(WebKernelRenderProcessHandler);

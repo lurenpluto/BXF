@@ -2,25 +2,66 @@
 	<head>
 		<title>Binding Test</title>
 		<script language="JavaScript">
-			// Register the callback for messages from the browser process.
-			app.setMessageCallback('binding_test', function(name, args) {
-			  document.getElementById('result').value = "Response: "+args[0];
+			/**
+			 * Register Javascript Function 4 BOLT
+			 */	
+			xlue.registerJavascriptFunction('alert',function(functionName,msg){
+				alert("name:"+msg.name);
+				return JSON.parse('{"name":"cef"}');
 			});
 
-			// Send a message to the browser process.
-			function sendMessage() {
+			/**
+			 * Handler the Lua Message
+			 */	
+			xlue.onLuaMessageReceived(function(functionName,msg){
+				alert("name:"+msg.name);
+				sendMessage();
+			});
+
+			/**
+			 * Send a message to the brow process.
+			 */	
+ 			function sendMessage() {
 			  var msg = document.getElementById("message").value;
-			  app.sendMessage('binding_test',
-				  JSON.parse('{"city":{"name":"Shenzhen","date":"2013"},"street":"Keji road"}'));
+			  xlue.sendMessage('binding_test', JSON.parse(msg))
+			}
+
+			/**
+			 * Call lua function in the borwser process
+			 */	
+			function callLuaTest(){
+				var msg = document.getElementById("message").value;
+				xlue.callLuaFunction('testfunc',JSON.parse(msg),function(name,args){
+					document.getElementById('result').value = 
+						"result from lua: " + args.result;
+				});
 			}
 		</script>
 
 	</head>
 	<body>
 		<form>
-			Message: <input type="text" id="message"
-			value="{'city':'Beijing','street':' Chaoyang Road ','postcode':100025}"><br/>
-			<input type="button" onclick="sendMessage();" value="Send Message"><br/>
+			Message: 
+			<input type="text" 
+			       id="message" 
+				   size="100"
+				   value="{&quot;city&quot;:&quot;ShenZhen&quot;,&quot;street&quot;:&quot;Keji Road&quot;,&quot;postcode&quot;:518057}">
+			</input>
+			<br/>
+			
+			<input type="button" 
+				   size="50" 
+				   onclick="sendMessage();" 
+				   value="Send Message to Lua">
+			</input>
+			<br/>
+			
+			<input type="button" 
+				   size="50" 
+				   onclick="callLuaTest();" 
+				   value="Call Lua Function">
+			</input>
+			<br/>
 			You should see the reverse of your message below:<br/>
 			<textarea rows="10" cols="40" id="result">
 			</textarea>

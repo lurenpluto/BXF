@@ -11,7 +11,12 @@ void DBG(const wchar_t* message)
 	MessageBox(NULL,(LPCWSTR)message,(LPCWSTR)L"DEBUG",MB_OK);
 }
 
-void DBG(CefString message)
+void DBG(const std::wstring& message)
+{
+	MessageBox(NULL,(LPCWSTR)message.c_str(),(LPCWSTR)L"DEBUG",MB_OK);
+}
+
+void DBG(const CefString& message)
 {
 	MessageBox(NULL,(LPCWSTR)message.c_str(),(LPCWSTR)L"DEBUG",MB_OK);
 }
