@@ -142,6 +142,7 @@ void OneDimentionRenderMMX(XL_BITMAP_HANDLE hBitmap, const float &i_sigma, int i
 	{
 		lpPixelBufferLine = lpPixelBufferTempInitial + column * bmp.Height; // 线头
 		lpPixelBufferDest = lpPixelBufferDestEnd + column; // 线尾
+		// 没有考虑半径大于等于高度一半时怎么做. 
 		Vertical_mmx_fir_line(radius, bmp.ScanLineLength, bmp.Height, weightInt, lpPixelBufferDest, lpPixelBufferLine);
 	}
 	delete []weightBufferInitial;

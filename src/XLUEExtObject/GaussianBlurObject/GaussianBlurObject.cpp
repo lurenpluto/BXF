@@ -30,6 +30,10 @@ void GaussianBlurObject::SetSigma(const float &sigma)
 		return;
 	}
 	m_sigma = sigma;
+	if (m_type == Default)
+	{
+		m_radius = m_sigma * 3;
+	}
 	PushDirtyRect(NULL);
 }
 
@@ -113,6 +117,7 @@ void GaussianBlurObject::OnPaint( XL_BITMAP_HANDLE hBitmapDest, const RECT* lpDe
 		{
 			DericheIIRRenderSSE(hClipBitmap, m_sigma);
 		}
+		// ªÏ”√
 		else if (m_type == Default)
 		{
 			if (m_radius <= 3)
