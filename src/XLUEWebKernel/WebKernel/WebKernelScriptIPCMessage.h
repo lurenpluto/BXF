@@ -102,7 +102,7 @@ public:
 	{
 		return Wrap(name,m_luaFunctionNumber++);
 	}
-	static const std::wstring WrapLuaCallName(const std::wstring& name)
+	static const std::wstring WrapJavascriptFunctionName(const std::wstring& name)
 	{
 		return Wrap(name,m_javascriptFunctionNumber++);
 	}

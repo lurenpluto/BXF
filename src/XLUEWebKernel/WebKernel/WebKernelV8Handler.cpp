@@ -373,7 +373,7 @@ bool WebKernelV8Handler::OnLuaCallMessageRecieved(
 	// find the callback
 	JavascriptFuncMap::const_iterator it = m_javascriptFuncMap.find(
 		std::make_pair(javascriptFunctionName,browser->GetIdentifier()));
-	if (it == m_javascriptFuncMap.end()) 
+	if (it == m_javascriptFuncMap.end())
 	{
 		return true;
 	}
@@ -527,6 +527,9 @@ void WebKernelV8Handler::InsertJavascriptFunction(
 	m_javascriptFuncMap.insert(
 		std::make_pair(std::make_pair(message_name, browser_id),
 		std::make_pair(context, function)));
+	std::wstringstream wss;
+	wss<<L"js func count:"<<m_javascriptFuncMap.size();
+	DBG(wss.str());
 }
 
 bool WebKernelV8Handler::RemoveJavascriptFunction(const std::wstring& message_name, int browser_id) 

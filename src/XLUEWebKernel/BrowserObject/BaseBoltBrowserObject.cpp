@@ -350,7 +350,7 @@ bool BaseBoltBrowserObject::CallJavascriptFunction( const CefString& functionNam
 		return NULL;
 	}
 
-	std::wstring wrapJavascriptFunctionName = WebKernelScriptIPCMessage::WrapLuaCallName(functionName);
+	std::wstring wrapJavascriptFunctionName = WebKernelScriptIPCMessage::WrapJavascriptFunctionName(functionName);
 	RegisterLuaCallbackFunctor(wrapJavascriptFunctionName,functor);
 
 	return m_lpBaseBrowser->CallJavascriptFunction(wrapJavascriptFunctionName,dictionaryValue);
