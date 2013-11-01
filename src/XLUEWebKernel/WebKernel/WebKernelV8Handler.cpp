@@ -27,8 +27,10 @@ WebKernelV8Handler::WebKernelV8Handler(CefRefPtr<WebKernelRenderProcessHandler> 
 }
 
 bool WebKernelV8Handler::Execute(
-	const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments
-	, CefRefPtr<CefV8Value>& retval , CefString& exception)
+	const CefString& name, CefRefPtr<CefV8Value> object
+	, const CefV8ValueList& arguments
+	, CefRefPtr<CefV8Value>& retval
+	, CefString& exception)
 {
 	bool handled = false;
 
@@ -325,31 +327,31 @@ bool WebKernelV8Handler::OnLuaMessageRecieved(
 		it!=m_luaMessageEvent.end();
 		++it)
 	{
-		// Keep a local reference to the objects. The callback may remove itself
-		// from the callback map.
-		CefRefPtr<CefV8Context> context = it->second.first;
-		CefRefPtr<CefV8Value> callback = it->second.second;
+	// Keep a local reference to the objects. The callback may remove itself
+	// from the callback map.
+	CefRefPtr<CefV8Context> context = it->second.first;
+	CefRefPtr<CefV8Value> callback = it->second.second;
 
-		// Enter the context.
-		context->Enter();
+	// Enter the context.
+	context->Enter();
 
-		CefV8ValueList arguments;
+	CefV8ValueList arguments;
 
-		// First argument is the message name.
-		arguments.push_back(CefV8Value::CreateString(s_szOnLuaMessageReceived));
+	// First argument is the message name.
+	arguments.push_back(CefV8Value::CreateString(s_szOnLuaMessageReceived));
 
-		// Second argument is the list of message arguments.
-		CefRefPtr<CefListValue> list = message->GetArgumentList();
-		CefRefPtr<CefDictionaryValue> ret = list->GetDictionary(0);
-		CefRefPtr<CefV8Value> args = CefV8Value::CreateObject(NULL);
-		WebKernelConvertor::CefDictionaryValue2V8JsonObject(ret, args);
-		arguments.push_back(args);
+	// Second argument is the list of message arguments.
+	CefRefPtr<CefListValue> list = message->GetArgumentList();
+	CefRefPtr<CefDictionaryValue> ret = list->GetDictionary(0);
+	CefRefPtr<CefV8Value> args = CefV8Value::CreateObject(NULL);
+	WebKernelConvertor::CefDictionaryValue2V8JsonObject(ret, args);
+	arguments.push_back(args);
 
-		// Execute the callback.
-		CefRefPtr<CefV8Value> retval = callback->ExecuteFunction(NULL, arguments);
+	// Execute the callback.
+	CefRefPtr<CefV8Value> retval = callback->ExecuteFunction(NULL, arguments);
 
-		// Exit the context.
-		context->Exit();
+	// Exit the context.
+	context->Exit();
 	}
 
 	return true;
@@ -386,17 +388,15 @@ bool WebKernelV8Handler::OnLuaCallMessageRecieved(
 	// Enter the context.
 	context->Enter();
 
-	CefV8ValueList arguments;
-
-	// First argument is the message name.
-	arguments.push_back(CefV8Value::CreateString(javascriptFunctionName));
-
-	// Second argument is the list of message arguments.
+	// convert CefListValue to CefV8Value args
+	CefRefPtr<CefV8Value> args = CefV8Value::CreateObject(NULL);
 	CefRefPtr<CefListValue> list = message->GetArgumentList();
 	CefRefPtr<CefDictionaryValue> ret = list->GetDictionary(0);
-	CefRefPtr<CefV8Value> args = CefV8Value::CreateObject(NULL);
 	WebKernelConvertor::CefDictionaryValue2V8JsonObject(ret, args);
-	CefString v = args->GetValue("name")->GetStringValue();
+
+	// create arguments for execute Javascript function
+	CefV8ValueList arguments;
+	arguments.push_back(CefV8Value::CreateString(javascriptFunctionName));
 	arguments.push_back(args);
 
 	// Execute the callback.
@@ -432,7 +432,6 @@ bool WebKernelV8Handler::OnJavascriptCallbackMessageRecieved(
 	CefRefPtr<CefProcessMessage> message)
 {
 	// Decode the message 
-	
 	CefString javascriptCallbackMessageName = message->GetName();
 	std::wstring javascriptCallbackName;
 	bool success = WebKernelScriptIPCMessage::DecodeJavascriptCallbackMessage(javascriptCallbackMessageName,javascriptCallbackName);
@@ -458,16 +457,15 @@ bool WebKernelV8Handler::OnJavascriptCallbackMessageRecieved(
 	// Enter the context.
 	context->Enter();
 
-	CefV8ValueList arguments;
-
-	// First argument is the message name.
-	arguments.push_back(CefV8Value::CreateString(javascriptCallbackName));
-
-	// Second argument is the message arguments.
+	// convert CefListValue to CefV8Value args
+	CefRefPtr<CefV8Value> args = CefV8Value::CreateObject(NULL);
 	CefRefPtr<CefListValue> list = message->GetArgumentList();
 	CefRefPtr<CefDictionaryValue> ret = list->GetDictionary(0);
-	CefRefPtr<CefV8Value> args = CefV8Value::CreateObject(NULL);
 	WebKernelConvertor::CefDictionaryValue2V8JsonObject(ret, args);
+
+	// create arguments for execute Javascript function
+	CefV8ValueList arguments;
+	arguments.push_back(CefV8Value::CreateString(javascriptCallbackName));
 	arguments.push_back(args);
 
 	// Execute the callback.
