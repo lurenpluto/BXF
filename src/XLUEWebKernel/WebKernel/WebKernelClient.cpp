@@ -9,7 +9,7 @@
 
 WebKernelClient::WebKernelClient(void)
 {
-	m_javascriptHandler = new WebKernelJavascriptHandler();
+	
 }
 
 WebKernelClient::~WebKernelClient(void)
@@ -104,6 +104,13 @@ bool WebKernelClient::SetDisplayHandler( CefDisplayHandler* lpHandler )
 bool WebKernelClient::SetRenderHandler( CefRenderHandler* lpHandler )
 {
 	m_renderHandler = lpHandler;
+
+	return true;
+}
+
+bool  WebKernelClient::SetJavascriptHandler(WebKernelJavascriptHandler* lpHandler)
+{
+	m_javascriptHandler = lpHandler;
 
 	return true;
 }

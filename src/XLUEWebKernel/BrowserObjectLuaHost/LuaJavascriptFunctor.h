@@ -23,8 +23,6 @@
 #ifndef __LUAJAVASCRIPTFUNCTOR_H__
 #define __LUAJAVASCRIPTFUNCTOR_H__
 
-#include "./LuaBaseFunctor.h"
-
 class LuaJavascriptFunctor:public BaseLuaListener
 {
 public:

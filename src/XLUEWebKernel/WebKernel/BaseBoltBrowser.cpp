@@ -220,6 +220,9 @@ void BaseBoltBrowser::OnInitClient()
 
 	m_displayHandler = new WebKernelDisplayHandler(this);
 	m_client->SetDisplayHandler(m_displayHandler.get());
+
+	m_javascriptHandler = new WebKernelJavascriptHandler();
+	m_client->SetJavascriptHandler(m_javascriptHandler);
 }
 
 void BaseBoltBrowser::OnUninitClient()
@@ -227,12 +230,16 @@ void BaseBoltBrowser::OnUninitClient()
 	assert(m_client);
 	m_client->SetDisplayHandler(NULL);
 	m_client->SetLifeSpanHandler(NULL);
+	m_client->SetJavascriptHandler(NULL);
 
 	assert(m_lifeSpanHandler);
 	m_lifeSpanHandler = NULL;
 
 	assert(m_displayHandler);
 	m_displayHandler = NULL;
+
+	assert(m_javascriptHandler);
+	m_javascriptHandler = NULL;
 }
 
 void BaseBoltBrowser::OnBeforePopup( CefRefPtr<CefFrame> frame, const CefString& targetUrl

@@ -35,6 +35,7 @@ public:
 	bool SetLifeSpanHandler(CefLifeSpanHandler* lpHandler);
 	bool SetDisplayHandler(CefDisplayHandler* lpHandler);
 	bool SetRenderHandler(CefRenderHandler* lpHandler);
+	bool SetJavascriptHandler(WebKernelJavascriptHandler* lpHandler);
 
 private:
 

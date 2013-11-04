@@ -26,10 +26,10 @@
 class WebKernelConvertor
 {
 public:
-	// Transfer a V8 value to a List value.
+	// Transfer a V8 Array value to a List value.
 	static void CefV8Array2ListValue(CefRefPtr<CefV8Value> source, CefRefPtr<CefListValue> target);
 
-	// Transfer a List value to a V8 value.
+	// Transfer a List value to a V8 Array value.
 	static void CefListValue2V8Array(CefRefPtr<CefListValue> source, CefRefPtr<CefV8Value> target);
 
 	// Transfer a V8 Json Object 2 a Dictionary value.

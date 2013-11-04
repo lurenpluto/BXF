@@ -4,7 +4,6 @@
 /* found in the LICENSE file.
 ********************************************************************/ 
 #include "stdafx.h"
-#include "./LuaBaseFunctor.h"
 #include "./LuaJavascriptFunctor.h"
 #include "../WebKernel/DBG.h"
 #include <sstream>

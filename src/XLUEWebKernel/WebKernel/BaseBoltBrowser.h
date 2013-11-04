@@ -204,6 +204,8 @@ private:
 
 	CefRefPtr<WebKernelDisplayHandler> m_displayHandler;
 
+	CefRefPtr<WebKernelJavascriptHandler> m_javascriptHandler;
+
 	bool m_closeOnCreate;
 
 private:
